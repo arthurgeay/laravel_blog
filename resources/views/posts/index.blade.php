@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    <post-list></post-list>
+    <post-list :posts="{{ $posts }}"></post-list>
 @endsection
