@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 import PostList from './components/PostList.vue';
 Vue.component('post-list', PostList);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

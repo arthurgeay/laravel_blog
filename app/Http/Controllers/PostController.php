@@ -7,12 +7,30 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * Return view of all posts
+     */
     public function index()
     {
-        $posts = Post::with('user')->orderBy('created_at', 'desc')->get();
+        $posts = $this->getAllPosts();
 
         return view('posts.index', [
-            'posts' => $posts
+            'posts' => json_encode($posts),
+            'url_api' => route('api.allPosts')
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * Endpoint API for Paginate result of all post
+     */
+    public function getAllPosts()
+    {
+        $posts = Post::with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(6);
+
+        return $posts;
     }
 }

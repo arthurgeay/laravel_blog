@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    <post-list :posts="{{ $posts }}"></post-list>
+    <post-list :data-posts="{{ $posts }}" data-url-api="{{ $url_api }}"></post-list>
 @endsection
