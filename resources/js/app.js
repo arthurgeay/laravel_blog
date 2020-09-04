@@ -20,8 +20,11 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 import PostList from './components/PostList.vue';
+import Post from './components/Post.vue';
+
 Vue.component('post-list', PostList);
 Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('post', Post);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -30,5 +33,5 @@ Vue.component('pagination', require('laravel-vue-pagination'));
  */
 
 const app = new Vue({
-    el: '#app',
+    el: '#app'
 });

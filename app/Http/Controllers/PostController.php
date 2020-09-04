@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use Illuminate\Http\Request;
+use Psy\Util\Json;
 
 class PostController extends Controller
 {
@@ -32,5 +33,21 @@ class PostController extends Controller
             ->paginate(6);
 
         return $posts;
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * Show a post
+     */
+    public function show($id)
+    {
+        $post = Post::where('id', $id)
+            ->with('user')
+            ->first();
+
+        return view('posts.show', [
+            'post' => $post
+        ]);
     }
 }

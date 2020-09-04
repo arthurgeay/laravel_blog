@@ -18,7 +18,7 @@
                         <p class="card-text">
                             {{ post.content | summary }}.
                         </p>
-                        <a href="#" class="btn btn-primary">Voir l'article en entier</a>
+                        <a :href="`./posts/${post.id}`" class="btn btn-primary">Voir l'article en entier</a>
                     </div>
                 </div>
             </div>
