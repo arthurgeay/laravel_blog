@@ -17,7 +17,8 @@
                 <p v-for="error in errorsContent">{{ error }}</p>
             </div>
         </div>
-        <button type="submit" class="btn btn-success" @click.prevent="sendForm">Créer</button>
+        <button v-if="post" type="submit" class="btn btn-success" @click.prevent="sendForm">Modifier</button>
+        <button v-else type="submit" class="btn btn-success" @click.prevent="sendForm">Créer</button>
     </form>
 </template>
 
@@ -27,8 +28,11 @@
         props: {
             apiUrl: {
                 type: String,
-                required: true
+                required: false
             },
+            post: {
+                type: Object
+            }
         },
         data() {
             return {
@@ -61,7 +65,14 @@
                 setTimeout(() => {
                    this.successMessage = '';
                 }, 4000);
+            },
+            setFields() {
+                this.title = this.post.title ?? '';
+                this.content = this.post.content ?? '';
             }
+        },
+        mounted() {
+            this.setFields();
         }
     }
 </script>

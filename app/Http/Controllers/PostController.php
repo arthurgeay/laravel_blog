@@ -79,4 +79,17 @@ class PostController extends Controller
 
         return response()->json(['message' => 'Article ajouté'], 200);
     }
+
+    /**
+     * Edit a post
+     */
+    public function edit(Request $request, $id)
+    {
+        $post = Post::where('id', $id)
+            ->first();
+
+        return view('posts.edit', [
+            'post' => $post
+        ]);
+    }
 }

@@ -1966,12 +1966,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostForm",
   props: {
     apiUrl: {
       type: String,
-      required: true
+      required: false
+    },
+    post: {
+      type: Object
     }
   },
   data: function data() {
@@ -2009,7 +2013,16 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         _this2.successMessage = '';
       }, 4000);
+    },
+    setFields: function setFields() {
+      var _this$post$title, _this$post$content;
+
+      this.title = (_this$post$title = this.post.title) !== null && _this$post$title !== void 0 ? _this$post$title : '';
+      this.content = (_this$post$content = this.post.content) !== null && _this$post$content !== void 0 ? _this$post$content : '';
     }
+  },
+  mounted: function mounted() {
+    this.setFields();
   }
 });
 
@@ -39096,20 +39109,35 @@ var render = function() {
         : _vm._e()
     ]),
     _vm._v(" "),
-    _c(
-      "button",
-      {
-        staticClass: "btn btn-success",
-        attrs: { type: "submit" },
-        on: {
-          click: function($event) {
-            $event.preventDefault()
-            return _vm.sendForm($event)
-          }
-        }
-      },
-      [_vm._v("Créer")]
-    )
+    _vm.post
+      ? _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { type: "submit" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.sendForm($event)
+              }
+            }
+          },
+          [_vm._v("Modifier")]
+        )
+      : _c(
+          "button",
+          {
+            staticClass: "btn btn-success",
+            attrs: { type: "submit" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.sendForm($event)
+              }
+            }
+          },
+          [_vm._v("Créer")]
+        )
   ])
 }
 var staticRenderFns = []
