@@ -1,5 +1,8 @@
 <template>
     <form>
+        <div class="alert alert-success" v-if="successMessage">
+            {{ successMessage }}
+        </div>
         <div class="form-group">
             <label for="title">Titre</label>
             <input type="text" class="form-control" :class="{'is-invalid': errorsTitle}" id="title" v-model="title" required>
@@ -32,7 +35,8 @@
                 title: '',
                 content: '',
                 errorsTitle: '',
-                errorsContent: ''
+                errorsContent: '',
+                successMessage: ''
             }
         },
         methods: {
@@ -41,11 +45,22 @@
                     title: this.title,
                     content: this.content
                 })
-                    .then(result => console.log(result))
+                    .then(result => {
+                        this.successMessage = result.data.message ?? '';
+                        this.resetFields();
+                    })
                     .catch(error => {
                         this.errorsTitle = [error.response.data.errors.title ? error.response.data.errors.title[0] : ''];
                         this.errorsContent = [error.response.data.errors.content ? error.response.data.errors.content[0] : ''];
                     });
+            },
+            resetFields() {
+                this.title = '';
+                this.content = '';
+
+                setTimeout(() => {
+                   this.successMessage = '';
+                }, 4000);
             }
         }
     }

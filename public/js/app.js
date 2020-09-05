@@ -1963,6 +1963,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostForm",
   props: {
@@ -1976,7 +1979,8 @@ __webpack_require__.r(__webpack_exports__);
       title: '',
       content: '',
       errorsTitle: '',
-      errorsContent: ''
+      errorsContent: '',
+      successMessage: ''
     };
   },
   methods: {
@@ -1987,11 +1991,24 @@ __webpack_require__.r(__webpack_exports__);
         title: this.title,
         content: this.content
       }).then(function (result) {
-        return console.log(result);
+        var _result$data$message;
+
+        _this.successMessage = (_result$data$message = result.data.message) !== null && _result$data$message !== void 0 ? _result$data$message : '';
+
+        _this.resetFields();
       })["catch"](function (error) {
         _this.errorsTitle = [error.response.data.errors.title ? error.response.data.errors.title[0] : ''];
         _this.errorsContent = [error.response.data.errors.content ? error.response.data.errors.content[0] : ''];
       });
+    },
+    resetFields: function resetFields() {
+      var _this2 = this;
+
+      this.title = '';
+      this.content = '';
+      setTimeout(function () {
+        _this2.successMessage = '';
+      }, 4000);
     }
   }
 });
@@ -38997,6 +39014,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("form", [
+    _vm.successMessage
+      ? _c("div", { staticClass: "alert alert-success" }, [
+          _vm._v("\n        " + _vm._s(_vm.successMessage) + "\n    ")
+        ])
+      : _vm._e(),
+    _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
       _c("label", { attrs: { for: "title" } }, [_vm._v("Titre")]),
       _vm._v(" "),
