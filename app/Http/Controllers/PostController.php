@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Post;
 use Illuminate\Http\Request;
-use Psy\Util\Json;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -51,8 +52,31 @@ class PostController extends Controller
         ]);
     }
 
+    /**
+     * Show post form
+     */
     public function create()
     {
-        return view('posts.create');
+        $apiToken = Auth::user()->api_token;
+        $apiUrl = route('api.post.store', ['api_token' => $apiToken]);
+
+        return view('posts.create', [
+            'apiUrl' => $apiUrl
+        ]);
+    }
+
+    /**
+     * Store a new post
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function store(PostRequest $request)
+    {
+        $post = new Post();
+        $post->title = $request->get('title');
+        $post->content = $request->get('content');
+        $post->user_id = Auth::user()->getAuthIdentifier();
+        $post->save();
+
+        return response()->json(['message' => 'Article ajouté'], 200);
     }
 }

@@ -1959,11 +1959,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostForm",
+  props: {
+    apiUrl: {
+      type: String,
+      required: true
+    }
+  },
   data: function data() {
     return {
       title: '',
       content: ''
     };
+  },
+  methods: {
+    sendForm: function sendForm() {
+      axios.post(this.apiUrl, {
+        title: this.title,
+        content: this.content
+      }).then(function (result) {
+        return console.log(result);
+      })["catch"](function (error) {
+        return console.log(error.response.data.errors);
+      });
+    }
   }
 });
 
@@ -39022,7 +39040,16 @@ var render = function() {
     _vm._v(" "),
     _c(
       "button",
-      { staticClass: "btn btn-success", attrs: { type: "submit" } },
+      {
+        staticClass: "btn btn-success",
+        attrs: { type: "submit" },
+        on: {
+          click: function($event) {
+            $event.preventDefault()
+            return _vm.sendForm($event)
+          }
+        }
+      },
       [_vm._v("Créer")]
     )
   ])

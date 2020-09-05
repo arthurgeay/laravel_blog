@@ -8,17 +8,33 @@
             <label for="content">Contenu</label>
             <textarea class="form-control" id="content" v-model="content" required></textarea>
         </div>
-        <button type="submit" class="btn btn-success">Créer</button>
+        <button type="submit" class="btn btn-success" @click.prevent="sendForm">Créer</button>
     </form>
 </template>
 
 <script>
     export default {
         name: "PostForm",
+        props: {
+            apiUrl: {
+                type: String,
+                required: true
+            },
+        },
         data() {
             return {
                 title: '',
                 content: ''
+            }
+        },
+        methods: {
+            sendForm() {
+                axios.post(this.apiUrl, {
+                    title: this.title,
+                    content: this.content
+                })
+                    .then(result => console.log(result))
+                    .catch(error => console.log(error.response.data.errors))
             }
         }
     }

@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/posts', 'PostController@getAllPosts')->name('api.allPosts');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});*/
+
+
+Route::middleware('auth:api')->group(function() {
+   Route::post('/posts', 'PostController@store')->name('api.post.store');
 });
+

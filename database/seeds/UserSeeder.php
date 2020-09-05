@@ -18,7 +18,8 @@ class UserSeeder extends Seeder
             DB::table('users')->insert([
                 'name' => $faker->name,
                 'email' => 'test'.$i.'@example.com',
-                'password' => bcrypt('test')
+                'password' => bcrypt('test'),
+                'api_token' => Str::random(60)
             ]);
         }
     }
