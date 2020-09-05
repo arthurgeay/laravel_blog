@@ -19,4 +19,9 @@ Auth::routes();
 
 Route::get('/', 'PostController@index')->name('home');
 Route::get('/posts/{id}', 'PostController@show')->name('post.show')->where('id', '\d+');
-Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+
+Route::middleware('auth')->group(function() {
+    Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+    Route::get('/posts/add', 'PostController@create')->name('post.add');
+});
+
