@@ -2,11 +2,17 @@
     <form>
         <div class="form-group">
             <label for="title">Titre</label>
-            <input type="text" class="form-control" id="title" v-model="title" required>
+            <input type="text" class="form-control" :class="{'is-invalid': errorsTitle}" id="title" v-model="title" required>
+            <div class="invalid-feedback" v-if="errorsTitle">
+                <p v-for="error in errorsTitle">{{ error }}</p>
+            </div>
         </div>
         <div class="form-group">
             <label for="content">Contenu</label>
-            <textarea class="form-control" id="content" v-model="content" required></textarea>
+            <textarea class="form-control" :class="{'is-invalid': errorsContent}" id="content" v-model="content" required></textarea>
+            <div class="invalid-feedback" v-if="errorsContent">
+                <p v-for="error in errorsContent">{{ error }}</p>
+            </div>
         </div>
         <button type="submit" class="btn btn-success" @click.prevent="sendForm">Créer</button>
     </form>
@@ -24,7 +30,9 @@
         data() {
             return {
                 title: '',
-                content: ''
+                content: '',
+                errorsTitle: '',
+                errorsContent: ''
             }
         },
         methods: {
@@ -34,7 +42,10 @@
                     content: this.content
                 })
                     .then(result => console.log(result))
-                    .catch(error => console.log(error.response.data.errors))
+                    .catch(error => {
+                        this.errorsTitle = [error.response.data.errors.title ? error.response.data.errors.title[0] : ''];
+                        this.errorsContent = [error.response.data.errors.content ? error.response.data.errors.content[0] : ''];
+                    });
             }
         }
     }

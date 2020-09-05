@@ -1957,6 +1957,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostForm",
   props: {
@@ -1968,18 +1974,23 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       title: '',
-      content: ''
+      content: '',
+      errorsTitle: '',
+      errorsContent: ''
     };
   },
   methods: {
     sendForm: function sendForm() {
+      var _this = this;
+
       axios.post(this.apiUrl, {
         title: this.title,
         content: this.content
       }).then(function (result) {
         return console.log(result);
       })["catch"](function (error) {
-        return console.log(error.response.data.errors);
+        _this.errorsTitle = [error.response.data.errors.title ? error.response.data.errors.title[0] : ''];
+        _this.errorsContent = [error.response.data.errors.content ? error.response.data.errors.content[0] : ''];
       });
     }
   }
@@ -38999,6 +39010,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
+        class: { "is-invalid": _vm.errorsTitle },
         attrs: { type: "text", id: "title", required: "" },
         domProps: { value: _vm.title },
         on: {
@@ -39009,7 +39021,18 @@ var render = function() {
             _vm.title = $event.target.value
           }
         }
-      })
+      }),
+      _vm._v(" "),
+      _vm.errorsTitle
+        ? _c(
+            "div",
+            { staticClass: "invalid-feedback" },
+            _vm._l(_vm.errorsTitle, function(error) {
+              return _c("p", [_vm._v(_vm._s(error))])
+            }),
+            0
+          )
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
@@ -39025,6 +39048,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
+        class: { "is-invalid": _vm.errorsContent },
         attrs: { id: "content", required: "" },
         domProps: { value: _vm.content },
         on: {
@@ -39035,7 +39059,18 @@ var render = function() {
             _vm.content = $event.target.value
           }
         }
-      })
+      }),
+      _vm._v(" "),
+      _vm.errorsContent
+        ? _c(
+            "div",
+            { staticClass: "invalid-feedback" },
+            _vm._l(_vm.errorsContent, function(error) {
+              return _c("p", [_vm._v(_vm._s(error))])
+            }),
+            0
+          )
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c(
