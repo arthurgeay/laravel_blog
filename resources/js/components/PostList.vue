@@ -14,7 +14,7 @@
                             {{ post.title }}
                         </h5>
                         <p>Rédigé par {{ post.user.name }}</p>
-                        <p>Publié le {{ post.created_at | dateInFrench }}</p>
+                        <p>Publié le {{ post.created_at | formatDate }}</p>
                         <p class="card-text">
                             {{ post.content | summary }}.
                         </p>
@@ -57,9 +57,6 @@
             summary(value) {
                 return `${value.substring(1, 100)}...` ;
             },
-            dateInFrench(value) {
-                return new Date(value).toLocaleDateString();
-            }
         },
         methods: {
             getResults(page = 1) {

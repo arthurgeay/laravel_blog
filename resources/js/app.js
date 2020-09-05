@@ -32,6 +32,11 @@ Vue.component('post', Post);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+/* Global filter for format date */
+Vue.filter('formatDate', function(value) {
+    return new Date(value).toLocaleDateString();
+});
+
 const app = new Vue({
     el: '#app'
 });

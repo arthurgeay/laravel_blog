@@ -1999,9 +1999,6 @@ __webpack_require__.r(__webpack_exports__);
   filters: {
     summary: function summary(value) {
       return "".concat(value.substring(1, 100), "...");
-    },
-    dateInFrench: function dateInFrench(value) {
-      return new Date(value).toLocaleDateString();
     }
   },
   methods: {
@@ -38899,8 +38896,7 @@ var render = function() {
             _vm._v(" Auteur : " + _vm._s(_vm.post.user.name))
           ]),
           _vm._v(
-            " - Publié le " +
-              _vm._s(_vm._f("dateInFrench")(_vm.post.created_at))
+            " - Publié le " + _vm._s(_vm._f("formatDate")(_vm.post.created_at))
           )
         ]),
         _vm._v(" "),
@@ -38966,8 +38962,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("p", [
                   _vm._v(
-                    "Publié le " +
-                      _vm._s(_vm._f("dateInFrench")(post.created_at))
+                    "Publié le " + _vm._s(_vm._f("formatDate")(post.created_at))
                   )
                 ]),
                 _vm._v(" "),
@@ -51221,6 +51216,11 @@ Vue.component('post', _components_Post_vue__WEBPACK_IMPORTED_MODULE_1__["default
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+/* Global filter for format date */
+
+Vue.filter('formatDate', function (value) {
+  return new Date(value).toLocaleDateString();
+});
 var app = new Vue({
   el: '#app'
 });
