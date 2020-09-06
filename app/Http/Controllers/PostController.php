@@ -89,7 +89,8 @@ class PostController extends Controller
 
         return view('posts.edit', [
             'post' => $post,
-            'apiUrl' => $apiUrl
+            'apiUrl' => $apiUrl,
+            'apiToken' => $apiToken
         ]);
     }
 

@@ -28,7 +28,7 @@
                                 <td>{{ post.updated_at}}</td>
                                 <td>
                                     <div class="dropdown">
-                                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Actions
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -64,6 +64,8 @@
                         </table>
                     </div>
                 </div>
+
+                <pagination :data="posts" @pagination-change-page="getResults" align="center"></pagination>
             </div>
         </div>
     </div>
@@ -77,8 +79,12 @@
                 required: true,
                 type: Object
             },
-            apiToken: {
+            apiUrl: {
                 required: true,
+                type: String
+            },
+            apiToken: {
+                require: true,
                 type: String
             }
         },
@@ -96,12 +102,25 @@
                         this.success = result.data.message;
                         this.posts.data.splice(index, 1);
 
-                        setTimeout(() => {
-                           this.success = '';
-                           this.error = '';
-                        }, 4000);
+                        this.resetAlert();
+
+                        // Refresh pagination when all the post of the page are deleted
+                        if(this.posts.data.length === 0 && this.posts.current_page > 1) {
+                            this.getResults(this.posts.current_page - 1);
+                        }
+
                     })
                     .catch(error => this.error = "Une erreur s'est produite. Veuillez réessayer.");
+            },
+            getResults(page = 1) {
+                axios.get(`${this.apiUrl}&page=${page}`)
+                    .then(result => this.posts = result.data)
+            },
+            resetAlert() {
+                setTimeout(() => {
+                    this.success = '';
+                    this.error = '';
+                }, 4000);
             }
         }
     }

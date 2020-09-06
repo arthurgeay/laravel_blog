@@ -1979,6 +1979,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
   props: {
@@ -1986,8 +1988,12 @@ __webpack_require__.r(__webpack_exports__);
       required: true,
       type: Object
     },
-    apiToken: {
+    apiUrl: {
       required: true,
+      type: String
+    },
+    apiToken: {
+      require: true,
       type: String
     }
   },
@@ -2007,13 +2013,31 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.posts.data.splice(index, 1);
 
-        setTimeout(function () {
-          _this.success = '';
-          _this.error = '';
-        }, 4000);
+        _this.resetAlert(); // Refresh pagination when all the post of the page are deleted
+
+
+        if (_this.posts.data.length === 0 && _this.posts.current_page > 1) {
+          _this.getResults(_this.posts.current_page - 1);
+        }
       })["catch"](function (error) {
         return _this.error = "Une erreur s'est produite. Veuillez réessayer.";
       });
+    },
+    getResults: function getResults() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get("".concat(this.apiUrl, "&page=").concat(page)).then(function (result) {
+        return _this2.posts = result.data;
+      });
+    },
+    resetAlert: function resetAlert() {
+      var _this3 = this;
+
+      setTimeout(function () {
+        _this3.success = '';
+        _this3.error = '';
+      }, 4000);
     }
   }
 });
@@ -39123,192 +39147,204 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Vos articles")]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("p", [
-              _c(
-                "a",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: { href: "./posts/add" }
-                },
-                [_vm._v("Ajouter un article")]
-              )
-            ]),
+      _c(
+        "div",
+        { staticClass: "col-md-8" },
+        [
+          _c("div", { staticClass: "card" }, [
+            _c("div", { staticClass: "card-header" }, [_vm._v("Vos articles")]),
             _vm._v(" "),
-            _vm.success
-              ? _c("div", { staticClass: "alert alert-success" }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(_vm.success) +
-                      "\n                    "
-                  )
-                ])
-              : _vm.error
-              ? _c("div", { staticClass: "alert alert-danger" }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(_vm.error) +
-                      "\n                    "
-                  )
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("table", { staticClass: "table" }, [
-              _vm._m(0),
+            _c("div", { staticClass: "card-body" }, [
+              _c("p", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { href: "./posts/add" }
+                  },
+                  [_vm._v("Ajouter un article")]
+                )
+              ]),
               _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.posts.data, function(post, index) {
-                  return _c("tr", [
-                    _c("th", { attrs: { scope: "row" } }, [
-                      _c("a", { attrs: { href: "./posts/" + post.id } }, [
-                        _vm._v(_vm._s(post.title))
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(post.updated_at))]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c("div", { staticClass: "dropdown" }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn btn-primary dropdown-toggle",
-                            attrs: {
-                              type: "button",
-                              id: "dropdownMenuButton",
-                              "data-toggle": "dropdown",
-                              "aria-haspopup": "true",
-                              "aria-expanded": "false"
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                        Actions\n                                    "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "dropdown-menu",
-                            attrs: { "aria-labelledby": "dropdownMenuButton" }
-                          },
-                          [
-                            _c(
-                              "a",
-                              {
-                                staticClass: "dropdown-item",
-                                attrs: { href: "./posts/" + post.id }
-                              },
-                              [_vm._v("Voir")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              {
-                                staticClass: "dropdown-item text-info",
-                                attrs: { href: "./posts/" + post.id + "/edit" }
-                              },
-                              [_vm._v("Modifier")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              {
-                                staticClass: "dropdown-item text-danger",
-                                attrs: {
-                                  "data-toggle": "modal",
-                                  "data-target": "#modal-" + post.id,
-                                  href: "#"
-                                }
-                              },
-                              [_vm._v("Supprimer")]
-                            )
-                          ]
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "modal fade",
-                        attrs: {
-                          id: "modal-" + post.id,
-                          tabindex: "-1",
-                          role: "dialog",
-                          "aria-labelledby": "modal-" + post.id,
-                          "aria-hidden": "true"
-                        }
-                      },
-                      [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "modal-dialog",
-                            attrs: { role: "document" }
-                          },
-                          [
-                            _c("div", { staticClass: "modal-content" }, [
-                              _vm._m(1, true),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "modal-body" }, [
-                                _vm._v(
-                                  "\n                                            Voulez-vous vraiment supprimer l'article : \"" +
-                                    _vm._s(post.title) +
-                                    '" ?\n                                        '
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "modal-footer" }, [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-secondary",
-                                    attrs: {
-                                      type: "button",
-                                      "data-dismiss": "modal"
-                                    }
-                                  },
-                                  [_vm._v("Annuler")]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-danger",
-                                    attrs: {
-                                      type: "button",
-                                      "data-dismiss": "modal"
-                                    },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.deletePost(post.id, index)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("Supprimer")]
-                                )
-                              ])
-                            ])
-                          ]
-                        )
-                      ]
+              _vm.success
+                ? _c("div", { staticClass: "alert alert-success" }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.success) +
+                        "\n                    "
                     )
                   ])
-                }),
-                0
-              )
+                : _vm.error
+                ? _c("div", { staticClass: "alert alert-danger" }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.error) +
+                        "\n                    "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("table", { staticClass: "table" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c(
+                  "tbody",
+                  _vm._l(_vm.posts.data, function(post, index) {
+                    return _c("tr", [
+                      _c("th", { attrs: { scope: "row" } }, [
+                        _c("a", { attrs: { href: "./posts/" + post.id } }, [
+                          _vm._v(_vm._s(post.title))
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(post.updated_at))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("div", { staticClass: "dropdown" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-success dropdown-toggle",
+                              attrs: {
+                                type: "button",
+                                id: "dropdownMenuButton",
+                                "data-toggle": "dropdown",
+                                "aria-haspopup": "true",
+                                "aria-expanded": "false"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                        Actions\n                                    "
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "dropdown-menu",
+                              attrs: { "aria-labelledby": "dropdownMenuButton" }
+                            },
+                            [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "dropdown-item",
+                                  attrs: { href: "./posts/" + post.id }
+                                },
+                                [_vm._v("Voir")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "dropdown-item text-info",
+                                  attrs: {
+                                    href: "./posts/" + post.id + "/edit"
+                                  }
+                                },
+                                [_vm._v("Modifier")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "dropdown-item text-danger",
+                                  attrs: {
+                                    "data-toggle": "modal",
+                                    "data-target": "#modal-" + post.id,
+                                    href: "#"
+                                  }
+                                },
+                                [_vm._v("Supprimer")]
+                              )
+                            ]
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "modal fade",
+                          attrs: {
+                            id: "modal-" + post.id,
+                            tabindex: "-1",
+                            role: "dialog",
+                            "aria-labelledby": "modal-" + post.id,
+                            "aria-hidden": "true"
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "modal-dialog",
+                              attrs: { role: "document" }
+                            },
+                            [
+                              _c("div", { staticClass: "modal-content" }, [
+                                _vm._m(1, true),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "modal-body" }, [
+                                  _vm._v(
+                                    "\n                                            Voulez-vous vraiment supprimer l'article : \"" +
+                                      _vm._s(post.title) +
+                                      '" ?\n                                        '
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "modal-footer" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-secondary",
+                                      attrs: {
+                                        type: "button",
+                                        "data-dismiss": "modal"
+                                      }
+                                    },
+                                    [_vm._v("Annuler")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-danger",
+                                      attrs: {
+                                        type: "button",
+                                        "data-dismiss": "modal"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deletePost(post.id, index)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Supprimer")]
+                                  )
+                                ])
+                              ])
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  }),
+                  0
+                )
+              ])
             ])
-          ])
-        ])
-      ])
+          ]),
+          _vm._v(" "),
+          _c("pagination", {
+            attrs: { data: _vm.posts, align: "center" },
+            on: { "pagination-change-page": _vm.getResults }
+          })
+        ],
+        1
+      )
     ])
   ])
 }

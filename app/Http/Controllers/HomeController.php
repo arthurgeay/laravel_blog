@@ -25,14 +25,21 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $posts = Post::where('user_id', Auth::user()->getAuthIdentifier())
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-
+        $posts = $this->getAllPostForAuthUser();
+        $apiToken = Auth::user()->api_token;
+        $apiUrl = route('api.allPosts.owner', ['api_token' => $apiToken]);
 
         return view('home', [
             'posts' => json_encode($posts),
-            'apiToken' => Auth::user()->api_token
+            'apiUrl' => $apiUrl,
+            'apiToken' => $apiToken
         ]);
+    }
+
+    public function getAllPostForAuthUser()
+    {
+        return Post::where('user_id', Auth::user()->getAuthIdentifier())
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10);
     }
 }
