@@ -4,6 +4,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Vos articles</div>
+                    {{ route('dashboard') }}
                     <div class="card-body">
                         <p>
                             <a class="btn btn-primary" :href="`./posts/add`">Ajouter un article</a>

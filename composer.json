@@ -15,7 +15,8 @@
         "laravel-lang/lang": "~7.0",
         "laravel/framework": "^7.24",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^2.2"
+        "laravel/ui": "^2.2",
+        "tightenco/ziggy": "^0.9.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.4",

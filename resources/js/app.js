@@ -1,3 +1,6 @@
+import route from 'ziggy';
+import { Ziggy } from './ziggy';
+
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -7,6 +10,12 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+
+Vue.mixin({
+    methods: {
+        route: (name, params, absolute) => route(name, params, absolute, Ziggy)
+    }
+});
 
 /**
  * The following block of code may be used to automatically register your
@@ -19,16 +28,12 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-import PostList from './components/PostList.vue';
-import Post from './components/Post.vue';
-import PostForm from './components/PostForm.vue';
-import Dashboard from './components/Dashboard.vue';
 
-Vue.component('post-list', PostList);
+Vue.component('post-list', require('./components/PostList').default);
 Vue.component('pagination', require('laravel-vue-pagination'));
-Vue.component('post', Post);
-Vue.component('post-form', PostForm);
-Vue.component('dashboard', Dashboard);
+Vue.component('post', require('./components/Post').default);
+Vue.component('post-form', require('./components/PostForm').default);
+Vue.component('dashboard', require('./components/Dashboard').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
