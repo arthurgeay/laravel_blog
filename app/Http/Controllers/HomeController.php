@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $posts = Post::where('user_id', Auth::user()->getAuthIdentifier())
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(10);
+
+        return view('home', [
+            'posts' => json_encode($posts)
+        ]);
     }
 }

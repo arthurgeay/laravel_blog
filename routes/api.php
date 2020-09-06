@@ -24,5 +24,6 @@ Route::get('/posts', 'PostController@getAllPosts')->name('api.allPosts');
 Route::middleware('auth:api')->group(function() {
    Route::post('/posts', 'PostController@store')->name('api.post.store');
    Route::put('/posts/{post}/edit', 'PostController@update')->name('api.post.update');
+   Route::get('/posts/mine', 'HomeController@getAllPostForAuthUser')->name('api.allPosts.owner');
 });
 

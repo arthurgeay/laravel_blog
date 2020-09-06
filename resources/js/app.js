@@ -22,11 +22,13 @@ window.Vue = require('vue');
 import PostList from './components/PostList.vue';
 import Post from './components/Post.vue';
 import PostForm from './components/PostForm.vue';
+import Dashboard from './components/Dashboard.vue';
 
 Vue.component('post-list', PostList);
 Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('post', Post);
 Vue.component('post-form', PostForm);
+Vue.component('dashboard', Dashboard);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
