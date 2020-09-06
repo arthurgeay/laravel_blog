@@ -29,8 +29,10 @@ class HomeController extends Controller
                     ->orderBy('updated_at', 'desc')
                     ->paginate(10);
 
+
         return view('home', [
-            'posts' => json_encode($posts)
+            'posts' => json_encode($posts),
+            'apiToken' => Auth::user()->api_token
         ]);
     }
 }

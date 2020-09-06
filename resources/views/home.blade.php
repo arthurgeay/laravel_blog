@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    <dashboard :posts="{{ $posts }}"></dashboard>
+    <dashboard :data-posts="{{ $posts }}" api-token="{{ $apiToken }}"></dashboard>
 @endsection

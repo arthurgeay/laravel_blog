@@ -19,7 +19,13 @@ class OwnerPost
     public function handle($request, Closure $next)
     {
         $postId = $request->segments()[1];
+
+        if($request->segments()[0] == 'api') {
+            $postId = $request->segments()[2];
+        }
+
         $post = Post::where('id', $postId)->first();
+
 
         if($post->user_id !== Auth::user()->getAuthIdentifier()) {
             return redirect('/');

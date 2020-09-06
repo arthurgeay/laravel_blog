@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Post;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class PostRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +14,7 @@ class PostRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::user()->getAuthIdentifier() == $this->post->user_id;
     }
 
     /**
@@ -26,7 +25,7 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|max:80|unique:posts',
+            'title' => 'required|max:80|unique:posts,title,'.$this->post->id,
             'content' => 'required'
         ];
     }

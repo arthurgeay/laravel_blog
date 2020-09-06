@@ -1973,11 +1973,47 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
   props: {
-    posts: {
-      required: true
+    dataPosts: {
+      required: true,
+      type: Object
+    },
+    apiToken: {
+      required: true,
+      type: String
+    }
+  },
+  data: function data() {
+    return {
+      posts: this.dataPosts,
+      success: '',
+      error: ''
+    };
+  },
+  methods: {
+    deletePost: function deletePost(id, index) {
+      var _this = this;
+
+      axios["delete"]("http://localhost/blog_laravel/public/api/posts/".concat(id, "?api_token=").concat(this.apiToken)).then(function (result) {
+        _this.success = result.data.message;
+
+        _this.posts.data.splice(index, 1);
+
+        setTimeout(function () {
+          _this.success = '';
+          _this.error = '';
+        }, 4000);
+      })["catch"](function (error) {
+        return _this.error = "Une erreur s'est produite. Veuillez réessayer.";
+      });
     }
   }
 });
@@ -39103,12 +39139,30 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
+            _vm.success
+              ? _c("div", { staticClass: "alert alert-success" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.success) +
+                      "\n                    "
+                  )
+                ])
+              : _vm.error
+              ? _c("div", { staticClass: "alert alert-danger" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.error) +
+                      "\n                    "
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
             _c("table", { staticClass: "table" }, [
               _vm._m(0),
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.posts.data, function(post) {
+                _vm._l(_vm.posts.data, function(post, index) {
                   return _c("tr", [
                     _c("th", { attrs: { scope: "row" } }, [
                       _c("a", { attrs: { href: "./posts/" + post.id } }, [
@@ -39189,7 +39243,7 @@ var render = function() {
                           id: "modal-" + post.id,
                           tabindex: "-1",
                           role: "dialog",
-                          "aria-labelledby": "exampleModalLabel",
+                          "aria-labelledby": "modal-" + post.id,
                           "aria-hidden": "true"
                         }
                       },
@@ -39212,7 +39266,36 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _vm._m(2, true)
+                              _c("div", { staticClass: "modal-footer" }, [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-secondary",
+                                    attrs: {
+                                      type: "button",
+                                      "data-dismiss": "modal"
+                                    }
+                                  },
+                                  [_vm._v("Annuler")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-danger",
+                                    attrs: {
+                                      type: "button",
+                                      "data-dismiss": "modal"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.deletePost(post.id, index)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Supprimer")]
+                                )
+                              ])
                             ])
                           ]
                         )
@@ -39268,27 +39351,6 @@ var staticRenderFns = [
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-secondary",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Annuler")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-danger", attrs: { type: "button" } },
-        [_vm._v("Supprimer")]
       )
     ])
   }

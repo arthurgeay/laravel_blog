@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,12 +93,31 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(PostRequest $request, Post $post)
+    /**
+     * @param UpdatePostRequest $request
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * Update post in database
+     */
+    public function update(UpdatePostRequest $request, Post $post)
     {
         $post->title = $request->get('title');
         $post->content = $request->get('content');
         $post->save();
 
         return response()->json(['message' => 'Article mis à jour'], 200);
+    }
+
+    /**
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     * Delete a post
+     */
+    public function destroy(Post $post)
+    {
+        $post->delete();
+
+        return response()->json(['message' => 'Article supprimé'], 200);
     }
 }

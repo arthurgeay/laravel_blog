@@ -8,6 +8,12 @@
                         <p>
                             <a class="btn btn-primary" :href="`./posts/add`">Ajouter un article</a>
                         </p>
+                        <div v-if="success" class="alert alert-success">
+                            {{ success }}
+                        </div>
+                        <div v-else-if="error" class="alert alert-danger">
+                            {{ error }}
+                        </div>
                         <table class="table">
                             <thead>
                             <tr>
@@ -17,7 +23,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="post in posts.data">
+                            <tr v-for="(post, index) in posts.data">
                                 <th scope="row"><a :href="`./posts/${post.id}`">{{ post.title }}</a></th>
                                 <td>{{ post.updated_at}}</td>
                                 <td>
@@ -34,7 +40,7 @@
                                     </div>
                                 </td>
 
-                                <div class="modal fade" :id="`modal-${post.id}`" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" :id="`modal-${post.id}`" tabindex="-1" role="dialog" :aria-labelledby="`modal-${post.id}`" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -48,7 +54,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                <button type="button" class="btn btn-danger">Supprimer</button>
+                                                <button type="button" class="btn btn-danger" @click="deletePost(post.id, index)" data-dismiss="modal">Supprimer</button>
                                             </div>
                                         </div>
                                     </div>
@@ -67,8 +73,35 @@
     export default {
         name: "Dashboard",
         props: {
-            posts: {
-                required: true
+            dataPosts: {
+                required: true,
+                type: Object
+            },
+            apiToken: {
+                required: true,
+                type: String
+            }
+        },
+        data() {
+            return {
+                posts: this.dataPosts,
+                success: '',
+                error: ''
+            }
+        },
+        methods: {
+            deletePost(id, index) {
+                axios.delete(`http://localhost/blog_laravel/public/api/posts/${id}?api_token=${this.apiToken}`)
+                    .then(result => {
+                        this.success = result.data.message;
+                        this.posts.data.splice(index, 1);
+
+                        setTimeout(() => {
+                           this.success = '';
+                           this.error = '';
+                        }, 4000);
+                    })
+                    .catch(error => this.error = "Une erreur s'est produite. Veuillez réessayer.");
             }
         }
     }
