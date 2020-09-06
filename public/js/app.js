@@ -1967,6 +1967,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostForm",
   props: {
@@ -1982,8 +1987,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       title: '',
       content: '',
-      errorsTitle: '',
-      errorsContent: '',
+      errorsTitle: null,
+      errorsContent: null,
+      error: null,
       successMessage: ''
     };
   },
@@ -1991,9 +1997,14 @@ __webpack_require__.r(__webpack_exports__);
     sendForm: function sendForm() {
       var _this = this;
 
-      axios.post(this.apiUrl, {
-        title: this.title,
-        content: this.content
+      var method = this.post ? 'put' : 'post';
+      axios({
+        method: method,
+        url: this.apiUrl,
+        data: {
+          title: this.title,
+          content: this.content
+        }
       }).then(function (result) {
         var _result$data$message;
 
@@ -2001,24 +2012,35 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.resetFields();
       })["catch"](function (error) {
-        _this.errorsTitle = [error.response.data.errors.title ? error.response.data.errors.title[0] : ''];
-        _this.errorsContent = [error.response.data.errors.content ? error.response.data.errors.content[0] : ''];
+        if (error.response.data.errors) {
+          _this.errorsTitle = error.response.data.errors.title ? [error.response.data.errors.title[0]] : null;
+          _this.errorsContent = error.response.data.errors.content ? [error.response.data.errors.content[0]] : null;
+          return;
+        }
+
+        _this.error = error.response.data.message ? error.response.data.message : null;
       });
     },
     resetFields: function resetFields() {
       var _this2 = this;
 
-      this.title = '';
-      this.content = '';
+      if (!this.post) {
+        this.title = '';
+        this.content = '';
+      }
+
+      this.errorsTitle = null;
+      this.errorsContent = null;
+      this.error = null;
       setTimeout(function () {
         _this2.successMessage = '';
       }, 4000);
     },
     setFields: function setFields() {
-      var _this$post$title, _this$post$content;
-
-      this.title = (_this$post$title = this.post.title) !== null && _this$post$title !== void 0 ? _this$post$title : '';
-      this.content = (_this$post$content = this.post.content) !== null && _this$post$content !== void 0 ? _this$post$content : '';
+      if (this.post) {
+        this.title = this.post.title;
+        this.content = this.post.content;
+      }
     }
   },
   mounted: function mounted() {
@@ -39030,6 +39052,12 @@ var render = function() {
     _vm.successMessage
       ? _c("div", { staticClass: "alert alert-success" }, [
           _vm._v("\n        " + _vm._s(_vm.successMessage) + "\n    ")
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.error
+      ? _c("div", { staticClass: "alert alert-danger" }, [
+          _vm._v("\n        " + _vm._s(_vm.error) + "\n    ")
         ])
       : _vm._e(),
     _vm._v(" "),

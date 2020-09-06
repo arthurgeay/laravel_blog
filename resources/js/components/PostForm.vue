@@ -3,6 +3,11 @@
         <div class="alert alert-success" v-if="successMessage">
             {{ successMessage }}
         </div>
+
+        <div class="alert alert-danger" v-if="error">
+            {{ error }}
+        </div>
+
         <div class="form-group">
             <label for="title">Titre</label>
             <input type="text" class="form-control" :class="{'is-invalid': errorsTitle}" id="title" v-model="title" required>
@@ -38,37 +43,56 @@
             return {
                 title: '',
                 content: '',
-                errorsTitle: '',
-                errorsContent: '',
+                errorsTitle: null,
+                errorsContent: null,
+                error: null,
                 successMessage: ''
             }
         },
         methods: {
             sendForm() {
-                axios.post(this.apiUrl, {
-                    title: this.title,
-                    content: this.content
+                const method = this.post ? 'put' : 'post';
+                axios({
+                    method: method,
+                    url: this.apiUrl,
+                    data: {
+                        title: this.title,
+                        content: this.content
+                    }
                 })
-                    .then(result => {
-                        this.successMessage = result.data.message ?? '';
-                        this.resetFields();
-                    })
-                    .catch(error => {
-                        this.errorsTitle = [error.response.data.errors.title ? error.response.data.errors.title[0] : ''];
-                        this.errorsContent = [error.response.data.errors.content ? error.response.data.errors.content[0] : ''];
-                    });
+                .then(result => {
+                    this.successMessage = result.data.message ?? '';
+                    this.resetFields();
+                })
+                .catch(error => {
+                    if(error.response.data.errors) {
+                        this.errorsTitle = error.response.data.errors.title ? [error.response.data.errors.title[0]] : null;
+                        this.errorsContent = error.response.data.errors.content ? [error.response.data.errors.content[0]] : null;
+                        return;
+                    }
+
+                    this.error = error.response.data.message ? error.response.data.message : null;
+                });
             },
             resetFields() {
-                this.title = '';
-                this.content = '';
+                if(!this.post) {
+                    this.title = '';
+                    this.content = '';
+                }
+
+                this.errorsTitle = null;
+                this.errorsContent = null;
+                this.error = null;
 
                 setTimeout(() => {
                    this.successMessage = '';
                 }, 4000);
             },
             setFields() {
-                this.title = this.post.title ?? '';
-                this.content = this.post.content ?? '';
+                if(this.post) {
+                    this.title = this.post.title;
+                    this.content = this.post.content;
+                }
             }
         },
         mounted() {

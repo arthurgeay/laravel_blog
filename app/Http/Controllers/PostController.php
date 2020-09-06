@@ -83,13 +83,23 @@ class PostController extends Controller
     /**
      * Edit a post
      */
-    public function edit(Request $request, $id)
+    public function edit(Post $post)
     {
-        $post = Post::where('id', $id)
-            ->first();
+        $apiToken = Auth::user()->api_token;
+        $apiUrl = route('api.post.update', ['api_token' => $apiToken, 'post' => $post]);
 
         return view('posts.edit', [
-            'post' => $post
+            'post' => $post,
+            'apiUrl' => $apiUrl
         ]);
+    }
+
+    public function update(PostRequest $request, Post $post)
+    {
+        $post->title = $request->get('title');
+        $post->content = $request->get('content');
+        $post->save();
+
+        return response()->json(['message' => 'Article mis à jour'], 200);
     }
 }

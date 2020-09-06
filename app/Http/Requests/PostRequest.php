@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Post;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class PostRequest extends FormRequest
 {
@@ -13,6 +15,12 @@ class PostRequest extends FormRequest
      */
     public function authorize()
     {
+        $id = $this->route()->parameter('post');
+
+        if($id) {
+            return Auth::user()->getAuthIdentifier() == $this->post->user_id;
+        }
+
         return true;
     }
 
@@ -24,7 +32,7 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|unique:posts|max:80',
+            'title' => 'required|max:80|unique:posts,title,'.$this->post->id,
             'content' => 'required'
         ];
     }
