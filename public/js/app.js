@@ -1929,6 +1929,9 @@ __webpack_require__.r(__webpack_exports__);
       type: Object,
       required: true
     }
+  },
+  mounted: function mounted() {
+    console.log(this.post);
   }
 });
 
@@ -39003,9 +39006,7 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-md-12" }, [
-        _c("h1", { staticClass: "text-center" }, [
-          _vm._v(_vm._s(_vm.post.title))
-        ]),
+        _c("h1", { staticClass: "text-center" }, [_vm._v(_vm._s(_vm.post.id))]),
         _vm._v(" "),
         _c("p", {}, [
           _c("span", { staticClass: "badge badge-primary" }, [

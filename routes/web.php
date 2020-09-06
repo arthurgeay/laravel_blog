@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', 'PostController@index')->name('home');
-Route::get('/posts/{id}', 'PostController@show')->name('post.show')->where('id', '\d+');
+Route::get('/posts/{post}', 'PostController@show')->name('post.show');
 
 Route::middleware('auth')->group(function() {
     Route::get('/dashboard', 'HomeController@index')->name('dashboard');

@@ -41,11 +41,9 @@ class PostController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * Show a post
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        $post = Post::where('id', $id)
-            ->with('user')
-            ->first();
+        $post->load('user');
 
         return view('posts.show', [
             'post' => $post
