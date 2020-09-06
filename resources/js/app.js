@@ -37,7 +37,11 @@ Vue.component('dashboard', Dashboard);
  */
 
 /* Global filter for format date */
-Vue.filter('formatDate', function(value) {
+Vue.filter('formatDate', function(value, withTime = false) {
+    if(withTime) {
+        return new Date(value).toLocaleString();
+    }
+
     return new Date(value).toLocaleDateString();
 });
 

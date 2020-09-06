@@ -39197,7 +39197,11 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.updated_at))]),
+                      _c("td", [
+                        _vm._v(
+                          _vm._s(_vm._f("formatDate")(post.updated_at, true))
+                        )
+                      ]),
                       _vm._v(" "),
                       _c("td", [
                         _c("div", { staticClass: "dropdown" }, [
@@ -51895,6 +51899,12 @@ Vue.component('dashboard', _components_Dashboard_vue__WEBPACK_IMPORTED_MODULE_3_
 /* Global filter for format date */
 
 Vue.filter('formatDate', function (value) {
+  var withTime = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+  if (withTime) {
+    return new Date(value).toLocaleString();
+  }
+
   return new Date(value).toLocaleDateString();
 });
 var app = new Vue({

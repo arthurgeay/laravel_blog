@@ -25,7 +25,7 @@
                             <tbody>
                             <tr v-for="(post, index) in posts.data">
                                 <th scope="row"><a :href="`./posts/${post.id}`">{{ post.title }}</a></th>
-                                <td>{{ post.updated_at}}</td>
+                                <td>{{ post.updated_at | formatDate(true) }}</td>
                                 <td>
                                     <div class="dropdown">
                                         <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
