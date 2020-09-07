@@ -31,7 +31,6 @@ class HomeController extends Controller
 
         return view('home', [
             'posts' => json_encode($posts),
-            'apiUrl' => $apiUrl,
             'apiToken' => $apiToken
         ]);
     }

@@ -1981,17 +1981,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
   props: {
     dataPosts: {
       required: true,
       type: Object
-    },
-    apiUrl: {
-      required: true,
-      type: String
     },
     apiToken: {
       require: true,
@@ -2009,7 +2004,10 @@ __webpack_require__.r(__webpack_exports__);
     deletePost: function deletePost(id, index) {
       var _this = this;
 
-      axios["delete"]("http://localhost/blog_laravel/public/api/posts/".concat(id, "?api_token=").concat(this.apiToken)).then(function (result) {
+      axios["delete"](this.route('api.post.destroy', {
+        api_token: this.apiToken,
+        post: id
+      })).then(function (result) {
         _this.success = result.data.message;
 
         _this.posts.data.splice(index, 1);
@@ -2028,7 +2026,10 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get("".concat(this.apiUrl, "&page=").concat(page)).then(function (result) {
+      axios.get(this.route('api.allPosts.owner', {
+        api_token: this.apiToken,
+        page: page
+      })).then(function (result) {
         return _this2.posts = result.data;
       });
     },
@@ -2118,15 +2119,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PostForm",
   props: {
-    apiUrl: {
+    apiToken: {
       type: String,
-      required: false
+      required: true
     },
     post: {
-      type: Object
+      type: Object,
+      required: false
     }
   },
   data: function data() {
@@ -2144,9 +2147,15 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var method = this.post ? 'put' : 'post';
+      var urlApi = method === 'post' ? this.route('api.post.store', {
+        api_token: this.apiToken
+      }) : this.route('api.post.update', {
+        api_token: this.apiToken,
+        post: this.post.id
+      });
       axios({
         method: method,
-        url: this.apiUrl,
+        url: urlApi,
         data: {
           title: this.title,
           content: this.content
@@ -2239,23 +2248,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'PostList',
   props: {
     dataPosts: {
       type: Object,
       required: true
-    },
-    dataUrlApi: {
-      type: String,
-      required: true
     }
   },
   data: function data() {
     return {
       posts: this.dataPosts,
-      urlApi: this.dataUrlApi
+      urlApi: this.route('api.allPosts')
     };
   },
   filters: {
@@ -39154,18 +39158,14 @@ var render = function() {
         [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [_vm._v("Vos articles")]),
-            _vm._v(
-              "\n                " +
-                _vm._s(_vm.route("dashboard")) +
-                "\n                "
-            ),
+            _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _c("p", [
                 _c(
                   "a",
                   {
                     staticClass: "btn btn-primary",
-                    attrs: { href: "./posts/add" }
+                    attrs: { href: _vm.route("post.add") }
                   },
                   [_vm._v("Ajouter un article")]
                 )
@@ -39197,9 +39197,15 @@ var render = function() {
                   _vm._l(_vm.posts.data, function(post, index) {
                     return _c("tr", [
                       _c("th", { attrs: { scope: "row" } }, [
-                        _c("a", { attrs: { href: "./posts/" + post.id } }, [
-                          _vm._v(_vm._s(post.title))
-                        ])
+                        _c(
+                          "a",
+                          {
+                            attrs: {
+                              href: _vm.route("post.show", { post: post.id })
+                            }
+                          },
+                          [_vm._v(_vm._s(post.title))]
+                        )
                       ]),
                       _vm._v(" "),
                       _c("td", [
@@ -39240,7 +39246,11 @@ var render = function() {
                                 "a",
                                 {
                                   staticClass: "dropdown-item",
-                                  attrs: { href: "./posts/" + post.id }
+                                  attrs: {
+                                    href: _vm.route("post.show", {
+                                      post: post.id
+                                    })
+                                  }
                                 },
                                 [_vm._v("Voir")]
                               ),
@@ -39250,7 +39260,9 @@ var render = function() {
                                 {
                                   staticClass: "dropdown-item text-info",
                                   attrs: {
-                                    href: "./posts/" + post.id + "/edit"
+                                    href: _vm.route("post.edit", {
+                                      post: post.id
+                                    })
                                   }
                                 },
                                 [_vm._v("Modifier")]
@@ -39586,7 +39598,16 @@ var render = function() {
             }
           },
           [_vm._v("Créer")]
-        )
+        ),
+    _vm._v(" "),
+    _c(
+      "a",
+      {
+        staticClass: "btn btn-secondary",
+        attrs: { href: _vm.route("dashboard") }
+      },
+      [_vm._v("Retour au dashboard")]
+    )
   ])
 }
 var staticRenderFns = []
@@ -39657,7 +39678,7 @@ var render = function() {
                   "a",
                   {
                     staticClass: "btn btn-primary",
-                    attrs: { href: "./posts/" + post.id }
+                    attrs: { href: _vm.route("post.show", { post: post.id }) }
                   },
                   [_vm._v("Voir l'article en entier")]
                 )
@@ -52413,7 +52434,7 @@ var Ziggy = {
       "domain": null
     }
   },
-  baseUrl: 'http://localhost/',
+  baseUrl: 'http://localhost/blog_laravel/public/',
   baseProtocol: 'http',
   baseDomain: 'localhost',
   basePort: false,

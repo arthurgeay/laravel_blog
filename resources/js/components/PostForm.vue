@@ -24,6 +24,7 @@
         </div>
         <button v-if="post" type="submit" class="btn btn-success" @click.prevent="sendForm">Modifier</button>
         <button v-else type="submit" class="btn btn-success" @click.prevent="sendForm">Créer</button>
+        <a :href="route('dashboard')" class="btn btn-secondary">Retour au dashboard</a>
     </form>
 </template>
 
@@ -31,12 +32,13 @@
     export default {
         name: "PostForm",
         props: {
-            apiUrl: {
+            apiToken: {
                 type: String,
-                required: false
+                required: true
             },
             post: {
-                type: Object
+                type: Object,
+                required: false
             }
         },
         data() {
@@ -51,10 +53,11 @@
         },
         methods: {
             sendForm() {
-                const method = this.post ? 'put' : 'post';
+                let method = this.post ? 'put' : 'post';
+                const urlApi = method === 'post' ? this.route('api.post.store', { api_token: this.apiToken}) : this.route('api.post.update', { api_token: this.apiToken, post: this.post.id});
                 axios({
                     method: method,
-                    url: this.apiUrl,
+                    url: urlApi,
                     data: {
                         title: this.title,
                         content: this.content

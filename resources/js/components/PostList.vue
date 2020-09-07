@@ -4,7 +4,6 @@
             <div class="col-md-12">
                 <h1 class="text-center">Liste des articles</h1>
             </div>
-
             <!-- Card -->
             <div class="row justify-content-center">
                 <div class="card col-md-3" v-for="post in posts.data">
@@ -18,7 +17,7 @@
                         <p class="card-text">
                             {{ post.content | summary }}.
                         </p>
-                        <a :href="`./posts/${post.id}`" class="btn btn-primary">Voir l'article en entier</a>
+                        <a :href="route('post.show', {post: post.id})" class="btn btn-primary">Voir l'article en entier</a>
                     </div>
                 </div>
             </div>
@@ -42,15 +41,11 @@
                type: Object,
                required: true
            },
-            dataUrlApi: {
-               type: String,
-                required: true
-            }
         },
         data() {
             return {
                 posts: this.dataPosts,
-                urlApi: this.dataUrlApi
+                urlApi: this.route('api.allPosts')
             }
         },
         filters: {

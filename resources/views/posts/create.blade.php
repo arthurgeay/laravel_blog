@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h1 class="text-center">Créer un article</h1>
-                <post-form api-url="{{ $apiUrl }}"></post-form>
+                <post-form api-token="{{ $apiToken }}"></post-form>
             </div>
         </div>
     </div>

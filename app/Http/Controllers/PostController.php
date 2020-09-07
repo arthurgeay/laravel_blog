@@ -20,7 +20,6 @@ class PostController extends Controller
 
         return view('posts.index', [
             'posts' => json_encode($posts),
-            'url_api' => route('api.allPosts')
         ]);
     }
 
@@ -57,10 +56,9 @@ class PostController extends Controller
     public function create()
     {
         $apiToken = Auth::user()->api_token;
-        $apiUrl = route('api.post.store', ['api_token' => $apiToken]);
 
         return view('posts.create', [
-            'apiUrl' => $apiUrl
+            'apiToken' => $apiToken
         ]);
     }
 
@@ -85,11 +83,9 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $apiToken = Auth::user()->api_token;
-        $apiUrl = route('api.post.update', ['api_token' => $apiToken, 'post' => $post]);
 
         return view('posts.edit', [
             'post' => $post,
-            'apiUrl' => $apiUrl,
             'apiToken' => $apiToken
         ]);
     }

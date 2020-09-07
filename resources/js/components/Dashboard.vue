@@ -4,10 +4,9 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Vos articles</div>
-                    {{ route('dashboard') }}
                     <div class="card-body">
                         <p>
-                            <a class="btn btn-primary" :href="`./posts/add`">Ajouter un article</a>
+                            <a class="btn btn-primary" :href="route('post.add')">Ajouter un article</a>
                         </p>
                         <div v-if="success" class="alert alert-success">
                             {{ success }}
@@ -25,7 +24,7 @@
                             </thead>
                             <tbody>
                             <tr v-for="(post, index) in posts.data">
-                                <th scope="row"><a :href="`./posts/${post.id}`">{{ post.title }}</a></th>
+                                <th scope="row"><a :href="route('post.show', {post: post.id})">{{ post.title }}</a></th>
                                 <td>{{ post.updated_at | formatDate(true) }}</td>
                                 <td>
                                     <div class="dropdown">
@@ -33,8 +32,8 @@
                                             Actions
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" :href="`./posts/${post.id}`">Voir</a>
-                                            <a class="dropdown-item text-info" :href="`./posts/${post.id}/edit`">Modifier</a>
+                                            <a class="dropdown-item" :href="route('post.show', {post: post.id})">Voir</a>
+                                            <a class="dropdown-item text-info" :href="route('post.edit', {post: post.id})">Modifier</a>
                                             <a class="dropdown-item text-danger" data-toggle="modal" :data-target="`#modal-${post.id}`" href="#">Supprimer</a>
                                         </div>
 
@@ -80,10 +79,6 @@
                 required: true,
                 type: Object
             },
-            apiUrl: {
-                required: true,
-                type: String
-            },
             apiToken: {
                 require: true,
                 type: String
@@ -98,7 +93,7 @@
         },
         methods: {
             deletePost(id, index) {
-                axios.delete(`http://localhost/blog_laravel/public/api/posts/${id}?api_token=${this.apiToken}`)
+                axios.delete(this.route('api.post.destroy', {api_token: this.apiToken, post: id}))
                     .then(result => {
                         this.success = result.data.message;
                         this.posts.data.splice(index, 1);
@@ -114,7 +109,7 @@
                     .catch(error => this.error = "Une erreur s'est produite. Veuillez réessayer.");
             },
             getResults(page = 1) {
-                axios.get(`${this.apiUrl}&page=${page}`)
+                axios.get(this.route('api.allPosts.owner', {api_token: this.apiToken, page: page}))
                     .then(result => this.posts = result.data)
             },
             resetAlert() {
