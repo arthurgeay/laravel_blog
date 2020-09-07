@@ -27,7 +27,6 @@ class HomeController extends Controller
     {
         $posts = $this->getAllPostForAuthUser();
         $apiToken = Auth::user()->api_token;
-        $apiUrl = route('api.allPosts.owner', ['api_token' => $apiToken]);
 
         return view('home', [
             'posts' => json_encode($posts),
