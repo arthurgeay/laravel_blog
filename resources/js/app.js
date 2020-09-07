@@ -34,7 +34,6 @@ Vue.component('pagination', require('laravel-vue-pagination'));
 Vue.component('post', require('./components/Post').default);
 Vue.component('post-form', require('./components/PostForm').default);
 Vue.component('dashboard', require('./components/Dashboard').default);
-Vue.component('comment', require('./components/Comment').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
