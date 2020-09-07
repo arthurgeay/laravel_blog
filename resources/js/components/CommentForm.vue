@@ -8,11 +8,17 @@
 
         <div class="form-group">
             <label for="name">Pseudo</label>
-            <input type="text" class="form-control" id="name" v-model="name" required>
+            <input type="text" class="form-control" :class="{'is-invalid': errors.errorsName }" id="name" v-model="name" required>
+            <div class="invalid-feedback" v-if="errors.errorsName">
+                <p v-for="error in errors.errorsName">{{ error }}</p>
+            </div>
         </div>
         <div class="form-group">
             <label for="content">Contenu</label>
-            <textarea class="form-control" id="content" required v-model="content"></textarea>
+            <textarea class="form-control" :class="{'is-invalid': errors.errorsContent }"  id="content" required v-model="content"></textarea>
+            <div class="invalid-feedback" v-if="errors.errorsContent">
+                <p v-for="error in errors.errorsContent">{{ error }}</p>
+            </div>
         </div>
         <button type="submit" class="btn btn-success" @click.prevent="emitAddComment">Ajouter</button>
     </form>
@@ -24,6 +30,9 @@
         props: {
             success: {
                 type: String
+            },
+            errors: {
+                type: Object
             }
         },
         data() {

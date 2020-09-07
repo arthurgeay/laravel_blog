@@ -7,7 +7,7 @@
                 <img src="https://fakeimg.pl/250x100" class="img-fluid w-100" alt="...">
                 <p>{{ post.content }}</p>
 
-                <comment-form :success="success" @add-comment="addComment"></comment-form>
+                <comment-form :success="success" :errors="errors" @add-comment="addComment"></comment-form>
                 <hr>
                 <h2>Commentaires</h2>
                 <comment v-for="comment in post.comments" :comment="comment" :key="comment.id"></comment>
@@ -37,7 +37,11 @@
             return {
                 post: this.dataPost,
                 apiUrl: this.route('api.comment.store', { post: this.dataPost.id }),
-                success: ''
+                success: null,
+                errors: {
+                    errorsName: null,
+                    errorsContent: null
+                }
             }
         },
         methods: {
@@ -48,11 +52,14 @@
                         this.success = result.data.message;
                         this.reset();
                     })
-                    .catch(error => console.log(error))
+                    .catch(error => {
+                        this.errors.errorsName = error.response.data.errors.name ?? null;
+                        this.errors.errorsContent = error.response.data.errors.content ?? null;
+                    })
             },
             reset() {
                 setTimeout(() => {
-                    this.success = '';
+                    this.success = null;
                 }, 4000);
             }
         }

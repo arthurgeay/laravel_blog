@@ -1960,11 +1960,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CommentForm",
   props: {
     success: {
       type: String
+    },
+    errors: {
+      type: Object
     }
   },
   data: function data() {
@@ -2187,7 +2196,11 @@ __webpack_require__.r(__webpack_exports__);
       apiUrl: this.route('api.comment.store', {
         post: this.dataPost.id
       }),
-      success: ''
+      success: null,
+      errors: {
+        errorsName: null,
+        errorsContent: null
+      }
     };
   },
   methods: {
@@ -2201,14 +2214,17 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.reset();
       })["catch"](function (error) {
-        return console.log(error);
+        var _error$response$data$, _error$response$data$2;
+
+        _this.errors.errorsName = (_error$response$data$ = error.response.data.errors.name) !== null && _error$response$data$ !== void 0 ? _error$response$data$ : null;
+        _this.errors.errorsContent = (_error$response$data$2 = error.response.data.errors.content) !== null && _error$response$data$2 !== void 0 ? _error$response$data$2 : null;
       });
     },
     reset: function reset() {
       var _this2 = this;
 
       setTimeout(function () {
-        _this2.success = '';
+        _this2.success = null;
       }, 4000);
     }
   }
@@ -39345,6 +39361,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
+        class: { "is-invalid": _vm.errors.errorsName },
         attrs: { type: "text", id: "name", required: "" },
         domProps: { value: _vm.name },
         on: {
@@ -39355,7 +39372,18 @@ var render = function() {
             _vm.name = $event.target.value
           }
         }
-      })
+      }),
+      _vm._v(" "),
+      _vm.errors.errorsName
+        ? _c(
+            "div",
+            { staticClass: "invalid-feedback" },
+            _vm._l(_vm.errors.errorsName, function(error) {
+              return _c("p", [_vm._v(_vm._s(error))])
+            }),
+            0
+          )
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
@@ -39371,6 +39399,7 @@ var render = function() {
           }
         ],
         staticClass: "form-control",
+        class: { "is-invalid": _vm.errors.errorsContent },
         attrs: { id: "content", required: "" },
         domProps: { value: _vm.content },
         on: {
@@ -39381,7 +39410,18 @@ var render = function() {
             _vm.content = $event.target.value
           }
         }
-      })
+      }),
+      _vm._v(" "),
+      _vm.errors.errorsContent
+        ? _c(
+            "div",
+            { staticClass: "invalid-feedback" },
+            _vm._l(_vm.errors.errorsContent, function(error) {
+              return _c("p", [_vm._v(_vm._s(error))])
+            }),
+            0
+          )
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c(
@@ -39733,7 +39773,7 @@ var render = function() {
           _c("p", [_vm._v(_vm._s(_vm.post.content))]),
           _vm._v(" "),
           _c("comment-form", {
-            attrs: { success: _vm.success },
+            attrs: { success: _vm.success, errors: _vm.errors },
             on: { "add-comment": _vm.addComment }
           }),
           _vm._v(" "),
