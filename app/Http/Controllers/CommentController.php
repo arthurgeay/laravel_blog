@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
+    /**
+     * @param CommentRequest $request
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * Store a new comment
+     */
     public function store(CommentRequest $request, Post $post)
     {
         $comment = new Comment();
