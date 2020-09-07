@@ -14,7 +14,7 @@ class CommentSeeder extends Seeder
     {
         DB::table('comments')->delete();
 
-        for($i = 0; $i < 40; $i++) {
+        for($i = 0; $i < 100; $i++) {
             DB::table('comments')->insert([
                 'name' => $faker->name,
                 'content' => $faker->text(40),

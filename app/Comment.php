@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
@@ -12,4 +13,9 @@ class Comment extends Model
         'content',
         'post_id'
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::instance(new \DateTime($value))->diffForHumans();
+    }
 }

@@ -6,6 +6,9 @@
                 <p class=""><span class="badge badge-primary"> Auteur : {{ post.user.name }}</span> - Publié le {{ post.created_at | formatDate }}</p>
                 <img src="https://fakeimg.pl/250x100" class="img-fluid w-100" alt="...">
                 <p>{{ post.content }}</p>
+
+                <h2>Commentaires</h2>
+                <comment v-for="comment in post.comments" :comment="comment" :key="comment.id"></comment>
             </div>
         </div>
     </div>
