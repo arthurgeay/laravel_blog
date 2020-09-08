@@ -10,7 +10,10 @@
                 <comment-form :success="success" :errors="errors" @add-comment="addComment"></comment-form>
                 <hr>
                 <h2>Commentaires</h2>
-                <comment v-for="comment in post.comments" :comment="comment" :key="comment.id"></comment>
+                <comment v-for="comment in comments.data" :comment="comment" :key="comment.id"></comment>
+
+                <pagination :data="comments" @pagination-change-page="getComments" align="center"></pagination>
+
             </div>
         </div>
     </div>
@@ -24,10 +27,14 @@
     export default {
         name: "Post",
         props: {
-            dataPost: {
+            post: {
                 type: Object,
                 required: true
             },
+            dataComments: {
+                type: Object,
+                required: true
+            }
         },
         components: {
             Comment,
@@ -35,8 +42,9 @@
         },
         data() {
             return {
-                post: this.dataPost,
-                apiUrl: this.route('api.comment.store', { post: this.dataPost.id }),
+                comments: this.dataComments,
+                apiCommentStoreUrl: this.route('api.comment.store', { post: this.post.id }),
+                apiCommentGetUrl: this.route('api.comment.index', { post: this.post.id }),
                 success: null,
                 errors: {
                     errorsName: null,
@@ -46,9 +54,9 @@
         },
         methods: {
             addComment(payload) {
-                axios.post(this.apiUrl, payload)
+                axios.post(this.apiCommentStoreUrl, payload)
                     .then(result => {
-                        this.post.comments.push(result.data.comment);
+                        this.comments.data.unshift(result.data.comment);
                         this.success = result.data.message;
                         this.reset();
                     })
@@ -61,6 +69,10 @@
                 setTimeout(() => {
                     this.success = null;
                 }, 4000);
+            },
+            getComments(page = 1) {
+                axios.get(`${this.apiCommentGetUrl}?page=${page}`)
+                    .then(result => this.comments = result.data)
             }
         }
     }

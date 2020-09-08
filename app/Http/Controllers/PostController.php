@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Post;
@@ -43,10 +44,15 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post->load(['user', 'comments']);
+        $post->load(['user']);
+
+        $comments = Comment::where('post_id', $post->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('posts.show', [
-            'post' => $post
+            'post' => $post,
+            'comments' => json_encode($comments)
         ]);
     }
 

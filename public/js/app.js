@@ -2176,12 +2176,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Post",
   props: {
-    dataPost: {
+    post: {
+      type: Object,
+      required: true
+    },
+    dataComments: {
       type: Object,
       required: true
     }
@@ -2192,9 +2199,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      post: this.dataPost,
-      apiUrl: this.route('api.comment.store', {
-        post: this.dataPost.id
+      comments: this.dataComments,
+      apiCommentStoreUrl: this.route('api.comment.store', {
+        post: this.post.id
+      }),
+      apiCommentGetUrl: this.route('api.comment.index', {
+        post: this.post.id
       }),
       success: null,
       errors: {
@@ -2207,8 +2217,8 @@ __webpack_require__.r(__webpack_exports__);
     addComment: function addComment(payload) {
       var _this = this;
 
-      axios.post(this.apiUrl, payload).then(function (result) {
-        _this.post.comments.push(result.data.comment);
+      axios.post(this.apiCommentStoreUrl, payload).then(function (result) {
+        _this.comments.data.unshift(result.data.comment);
 
         _this.success = result.data.message;
 
@@ -2226,6 +2236,14 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         _this2.success = null;
       }, 4000);
+    },
+    getComments: function getComments() {
+      var _this3 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get("".concat(this.apiCommentGetUrl, "?page=").concat(page)).then(function (result) {
+        return _this3.comments = result.data;
+      });
     }
   }
 });
@@ -39781,11 +39799,16 @@ var render = function() {
           _vm._v(" "),
           _c("h2", [_vm._v("Commentaires")]),
           _vm._v(" "),
-          _vm._l(_vm.post.comments, function(comment) {
+          _vm._l(_vm.comments.data, function(comment) {
             return _c("comment", {
               key: comment.id,
               attrs: { comment: comment }
             })
+          }),
+          _vm._v(" "),
+          _c("pagination", {
+            attrs: { data: _vm.comments, align: "center" },
+            on: { "pagination-change-page": _vm.getComments }
           })
         ],
         2
@@ -52817,6 +52840,11 @@ var Ziggy = {
     },
     "api.allPosts": {
       "uri": "api\/posts",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "api.comment.index": {
+      "uri": "api\/comments\/{post}",
       "methods": ["GET", "HEAD"],
       "domain": null
     },

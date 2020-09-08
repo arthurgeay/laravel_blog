@@ -14,12 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/posts', 'PostController@getAllPosts')->name('api.allPosts');
-Route::post('/comments/{post}', 'CommentController@store')->name('api.comment.store');
-
 /*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });*/
+
+
+Route::get('/posts', 'PostController@getAllPosts')->name('api.allPosts');
+
+Route::get('/comments/{post}', 'CommentController@index')->name('api.comment.index');
+Route::post('/comments/{post}', 'CommentController@store')->name('api.comment.store');
 
 
 Route::middleware('auth:api')->group(function() {

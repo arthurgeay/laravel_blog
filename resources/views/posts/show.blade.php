@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    <post :data-post="{{ $post }}"></post>
+    <post :post="{{ $post }}" :data-comments="{{ $comments }}"></post>
 @endsection

@@ -10,6 +10,20 @@ use Illuminate\Http\Request;
 class CommentController extends Controller
 {
     /**
+     * @param $postId
+     * @return \Illuminate\Http\JsonResponse
+     * Return paginated comments of a post
+     */
+    public function index($postId)
+    {
+        $comments = Comment::where('post_id', $postId)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return $comments;
+    }
+
+    /**
      * @param CommentRequest $request
      * @param Post $post
      * @return \Illuminate\Http\JsonResponse
