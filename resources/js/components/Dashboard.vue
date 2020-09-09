@@ -14,7 +14,9 @@
                     <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                         <posts-admin :data-posts="dataPosts" :api-token="apiToken"></posts-admin>
                     </div>
-                    <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">...</div>
+                    <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
+                        <comments-admin></comments-admin>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,11 +25,13 @@
 
 <script>
     import PostsAdmin from './PostsAdmin.vue';
+    import CommentsAdmin from "./CommentsAdmin.vue";
 
     export default {
         name: "Dashboard",
         components: {
-            PostsAdmin
+            PostsAdmin,
+            CommentsAdmin
         },
         props: {
             dataPosts: {
