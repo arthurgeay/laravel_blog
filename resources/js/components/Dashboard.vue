@@ -15,7 +15,7 @@
                         <posts-admin :data-posts="dataPosts" :api-token="apiToken"></posts-admin>
                     </div>
                     <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-                        <comments-admin></comments-admin>
+                        <comments-admin :data-comments="comments"></comments-admin>
                     </div>
                 </div>
             </div>
@@ -43,6 +43,21 @@
                 type: String
             }
         },
+        data() {
+            return {
+                urlGetCommentsApi: this.route('api.comment.report.index', { api_token: this.apiToken}),
+                comments: null
+            }
+        },
+        methods: {
+            getReportComments() {
+                axios.get(this.urlGetCommentsApi)
+                    .then(result => this.comments = result.data)
+            }
+        },
+        mounted() {
+            this.getReportComments();
+        }
 
     }
 </script>

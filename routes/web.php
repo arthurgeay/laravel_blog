@@ -21,8 +21,10 @@ Route::get('/', 'PostController@index')->name('home');
 
 Route::middleware('auth')->group(function() {
     Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+
     Route::get('/posts/{post}/edit', 'PostController@edit')->name('post.edit')->middleware('owner.post');
     Route::get('/posts/add', 'PostController@create')->name('post.add');
+
 });
 
 Route::get('/posts/{post}', 'PostController@show')->name('post.show');

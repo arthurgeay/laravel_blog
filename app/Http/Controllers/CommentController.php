@@ -6,6 +6,8 @@ use App\Comment;
 use App\Http\Requests\CommentRequest;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
@@ -59,5 +61,25 @@ class CommentController extends Controller
         return response()->json([
             'message' => 'Commentaire signalé'
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     * Return all reported comments on posts by author
+     */
+    public function getReportsComments()
+    {
+        $userId = Auth::user()->getAuthIdentifier();
+
+        $comments = DB::table('comments')
+            ->select('comments.*', 'posts.title')
+            ->join('posts', 'posts.id', '=', 'comments.post_id')
+            ->join('users', 'users.id', '=', 'posts.user_id')
+            ->where('reports', '<>', 'NULL')
+            ->where('users.id', '=', $userId)
+            ->orderBy('reports', 'desc')
+            ->get();
+
+        return $comments;
     }
 }

@@ -19,4 +19,10 @@ class Comment extends Model
     {
         return Carbon::instance(new \DateTime($value))->diffForHumans();
     }
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
+    }
+
 }
