@@ -2025,6 +2025,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PostsAdmin_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostsAdmin.vue */ "./resources/js/components/PostsAdmin.vue");
 //
 //
 //
@@ -2048,58 +2049,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Dashboard",
+  components: {
+    PostsAdmin: _PostsAdmin_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   props: {
     dataPosts: {
       required: true,
@@ -2108,55 +2063,6 @@ __webpack_require__.r(__webpack_exports__);
     apiToken: {
       require: true,
       type: String
-    }
-  },
-  data: function data() {
-    return {
-      posts: this.dataPosts,
-      success: '',
-      error: ''
-    };
-  },
-  methods: {
-    deletePost: function deletePost(id, index) {
-      var _this = this;
-
-      axios["delete"](this.route('api.post.destroy', {
-        api_token: this.apiToken,
-        post: id
-      })).then(function (result) {
-        _this.success = result.data.message;
-
-        _this.posts.data.splice(index, 1);
-
-        _this.resetAlert(); // Refresh pagination when all the post of the page are deleted
-
-
-        if (_this.posts.data.length === 0 && _this.posts.current_page > 1) {
-          _this.getResults(_this.posts.current_page - 1);
-        }
-      })["catch"](function (error) {
-        return _this.error = "Une erreur s'est produite. Veuillez réessayer.";
-      });
-    },
-    getResults: function getResults() {
-      var _this2 = this;
-
-      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get(this.route('api.allPosts.owner', {
-        api_token: this.apiToken,
-        page: page
-      })).then(function (result) {
-        return _this2.posts = result.data;
-      });
-    },
-    resetAlert: function resetAlert() {
-      var _this3 = this;
-
-      setTimeout(function () {
-        _this3.success = '';
-        _this3.error = '';
-      }, 4000);
     }
   }
 });
@@ -2479,6 +2385,149 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("".concat(this.urlApi, "?page=").concat(page)).then(function (result) {
         return _this.posts = result.data;
       });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostsAdmin.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostsAdmin.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PostsAdmin",
+  props: {
+    dataPosts: {
+      required: true,
+      type: Object
+    },
+    apiToken: {
+      require: true,
+      type: String
+    }
+  },
+  data: function data() {
+    return {
+      posts: this.dataPosts,
+      success: '',
+      error: ''
+    };
+  },
+  methods: {
+    deletePost: function deletePost(id, index) {
+      var _this = this;
+
+      axios["delete"](this.route('api.post.destroy', {
+        api_token: this.apiToken,
+        post: id
+      })).then(function (result) {
+        _this.success = result.data.message;
+
+        _this.posts.data.splice(index, 1);
+
+        _this.resetAlert(); // Refresh pagination when all the post of the page are deleted
+
+
+        if (_this.posts.data.length === 0 && _this.posts.current_page > 1) {
+          _this.getResults(_this.posts.current_page - 1);
+        }
+      })["catch"](function (error) {
+        return _this.error = "Une erreur s'est produite. Veuillez réessayer.";
+      });
+    },
+    getResults: function getResults() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get(this.route('api.allPosts.owner', {
+        api_token: this.apiToken,
+        page: page
+      })).then(function (result) {
+        return _this2.posts = result.data;
+      });
+    },
+    resetAlert: function resetAlert() {
+      var _this3 = this;
+
+      setTimeout(function () {
+        _this3.success = '';
+        _this3.error = '';
+      }, 4000);
     }
   }
 });
@@ -39529,220 +39578,49 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c(
-        "div",
-        { staticClass: "col-md-8" },
-        [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Vos articles")]),
+      _c("div", { staticClass: "col-md-8" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "tab-content", attrs: { id: "myTabContent" } },
+          [
+            _c(
+              "div",
+              {
+                staticClass: "tab-pane fade show active",
+                attrs: {
+                  id: "posts",
+                  role: "tabpanel",
+                  "aria-labelledby": "posts-tab"
+                }
+              },
+              [
+                _c("posts-admin", {
+                  attrs: {
+                    "data-posts": _vm.dataPosts,
+                    "api-token": _vm.apiToken
+                  }
+                })
+              ],
+              1
+            ),
             _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("p", [
-                _c(
-                  "a",
-                  {
-                    staticClass: "btn btn-primary",
-                    attrs: { href: _vm.route("post.add") }
-                  },
-                  [_vm._v("Ajouter un article")]
-                )
-              ]),
-              _vm._v(" "),
-              _vm.success
-                ? _c("div", { staticClass: "alert alert-success" }, [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(_vm.success) +
-                        "\n                    "
-                    )
-                  ])
-                : _vm.error
-                ? _c("div", { staticClass: "alert alert-danger" }, [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(_vm.error) +
-                        "\n                    "
-                    )
-                  ])
-                : _vm._e(),
-              _vm._v(" "),
-              _c("table", { staticClass: "table" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.posts.data, function(post, index) {
-                    return _c("tr", [
-                      _c("th", { attrs: { scope: "row" } }, [
-                        _c(
-                          "a",
-                          {
-                            attrs: {
-                              href: _vm.route("post.show", { post: post.id })
-                            }
-                          },
-                          [_vm._v(_vm._s(post.title))]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _vm._v(
-                          _vm._s(_vm._f("formatDate")(post.updated_at, true))
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c("div", { staticClass: "dropdown" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-success dropdown-toggle",
-                              attrs: {
-                                type: "button",
-                                id: "dropdownMenuButton",
-                                "data-toggle": "dropdown",
-                                "aria-haspopup": "true",
-                                "aria-expanded": "false"
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\n                                        Actions\n                                    "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass: "dropdown-menu",
-                              attrs: { "aria-labelledby": "dropdownMenuButton" }
-                            },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "dropdown-item",
-                                  attrs: {
-                                    href: _vm.route("post.show", {
-                                      post: post.id
-                                    })
-                                  }
-                                },
-                                [_vm._v("Voir")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "dropdown-item text-info",
-                                  attrs: {
-                                    href: _vm.route("post.edit", {
-                                      post: post.id
-                                    })
-                                  }
-                                },
-                                [_vm._v("Modifier")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "dropdown-item text-danger",
-                                  attrs: {
-                                    "data-toggle": "modal",
-                                    "data-target": "#modal-" + post.id,
-                                    href: "#"
-                                  }
-                                },
-                                [_vm._v("Supprimer")]
-                              )
-                            ]
-                          )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          staticClass: "modal fade",
-                          attrs: {
-                            id: "modal-" + post.id,
-                            tabindex: "-1",
-                            role: "dialog",
-                            "aria-labelledby": "modal-" + post.id,
-                            "aria-hidden": "true"
-                          }
-                        },
-                        [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "modal-dialog",
-                              attrs: { role: "document" }
-                            },
-                            [
-                              _c("div", { staticClass: "modal-content" }, [
-                                _vm._m(1, true),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "modal-body" }, [
-                                  _vm._v(
-                                    "\n                                            Voulez-vous vraiment supprimer l'article : \"" +
-                                      _vm._s(post.title) +
-                                      '" ?\n                                        '
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "modal-footer" }, [
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-secondary",
-                                      attrs: {
-                                        type: "button",
-                                        "data-dismiss": "modal"
-                                      }
-                                    },
-                                    [_vm._v("Annuler")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass: "btn btn-danger",
-                                      attrs: {
-                                        type: "button",
-                                        "data-dismiss": "modal"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.deletePost(post.id, index)
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("Supprimer")]
-                                  )
-                                ])
-                              ])
-                            ]
-                          )
-                        ]
-                      )
-                    ])
-                  }),
-                  0
-                )
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("pagination", {
-            attrs: { data: _vm.posts, align: "center" },
-            on: { "pagination-change-page": _vm.getResults }
-          })
-        ],
-        1
-      )
+            _c(
+              "div",
+              {
+                staticClass: "tab-pane fade",
+                attrs: {
+                  id: "comments",
+                  role: "tabpanel",
+                  "aria-labelledby": "comments-tab"
+                }
+              },
+              [_vm._v("...")]
+            )
+          ]
+        )
+      ])
     ])
   ])
 }
@@ -39751,42 +39629,50 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Titre")]),
-        _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [
-          _vm._v("Dernière modification")
+    return _c(
+      "ul",
+      {
+        staticClass: "nav nav-tabs justify-content-center",
+        attrs: { id: "myTab", role: "tablist" }
+      },
+      [
+        _c("li", { staticClass: "nav-item", attrs: { role: "presentation" } }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link active",
+              attrs: {
+                id: "posts-tab",
+                "data-toggle": "tab",
+                href: "#posts",
+                role: "tab",
+                "aria-controls": "posts",
+                "aria-selected": "true"
+              }
+            },
+            [_vm._v("Articles")]
+          )
         ]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Actions")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
-        [_vm._v("Suppression d'un article")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
+        _c("li", { staticClass: "nav-item", attrs: { role: "presentation" } }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link",
+              attrs: {
+                id: "comments-tab",
+                "data-toggle": "tab",
+                href: "#comments",
+                role: "tab",
+                "aria-controls": "comments",
+                "aria-selected": "false"
+              }
+            },
+            [_vm._v("Commentaires")]
+          )
+        ])
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -40110,6 +39996,274 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-12" }, [
       _c("h1", { staticClass: "text-center" }, [_vm._v("Liste des articles")])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [_vm._v("Vos articles")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c("p", [
+            _c(
+              "a",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { href: _vm.route("post.add") }
+              },
+              [_vm._v("Ajouter un article")]
+            )
+          ]),
+          _vm._v(" "),
+          _vm.success
+            ? _c("div", { staticClass: "alert alert-success" }, [
+                _vm._v(
+                  "\n                " + _vm._s(_vm.success) + "\n            "
+                )
+              ])
+            : _vm.error
+            ? _c("div", { staticClass: "alert alert-danger" }, [
+                _vm._v(
+                  "\n                " + _vm._s(_vm.error) + "\n            "
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("table", { staticClass: "table" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.posts.data, function(post, index) {
+                return _c("tr", [
+                  _c("th", { attrs: { scope: "row" } }, [
+                    _c(
+                      "a",
+                      {
+                        attrs: {
+                          href: _vm.route("post.show", { post: post.id })
+                        }
+                      },
+                      [_vm._v(_vm._s(post.title))]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm._f("formatDate")(post.updated_at, true)))
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "dropdown" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success dropdown-toggle",
+                          attrs: {
+                            type: "button",
+                            id: "dropdownMenuButton",
+                            "data-toggle": "dropdown",
+                            "aria-haspopup": "true",
+                            "aria-expanded": "false"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                Actions\n                            "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "dropdown-menu",
+                          attrs: { "aria-labelledby": "dropdownMenuButton" }
+                        },
+                        [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "dropdown-item",
+                              attrs: {
+                                href: _vm.route("post.show", { post: post.id })
+                              }
+                            },
+                            [_vm._v("Voir")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "dropdown-item text-info",
+                              attrs: {
+                                href: _vm.route("post.edit", { post: post.id })
+                              }
+                            },
+                            [_vm._v("Modifier")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "dropdown-item text-danger",
+                              attrs: {
+                                "data-toggle": "modal",
+                                "data-target": "#modal-" + post.id,
+                                href: "#"
+                              }
+                            },
+                            [_vm._v("Supprimer")]
+                          )
+                        ]
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal fade",
+                      attrs: {
+                        id: "modal-" + post.id,
+                        tabindex: "-1",
+                        role: "dialog",
+                        "aria-labelledby": "modal-" + post.id,
+                        "aria-hidden": "true"
+                      }
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "modal-dialog",
+                          attrs: { role: "document" }
+                        },
+                        [
+                          _c("div", { staticClass: "modal-content" }, [
+                            _vm._m(1, true),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "modal-body" }, [
+                              _vm._v(
+                                "\n                                    Voulez-vous vraiment supprimer l'article : \"" +
+                                  _vm._s(post.title) +
+                                  '" ?\n                                '
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "modal-footer" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-secondary",
+                                  attrs: {
+                                    type: "button",
+                                    "data-dismiss": "modal"
+                                  }
+                                },
+                                [_vm._v("Annuler")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-danger",
+                                  attrs: {
+                                    type: "button",
+                                    "data-dismiss": "modal"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.deletePost(post.id, index)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Supprimer")]
+                              )
+                            ])
+                          ])
+                        ]
+                      )
+                    ]
+                  )
+                ])
+              }),
+              0
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("pagination", {
+        attrs: { data: _vm.posts, align: "center" },
+        on: { "pagination-change-page": _vm.getResults }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Titre")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [
+          _vm._v("Dernière modification")
+        ]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Actions")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Suppression d'un article")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   }
 ]
@@ -52839,6 +52993,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostList_vue_vue_type_template_id_4720a3c9___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostList_vue_vue_type_template_id_4720a3c9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/PostsAdmin.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/PostsAdmin.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _PostsAdmin_vue_vue_type_template_id_2cb49c32_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true& */ "./resources/js/components/PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true&");
+/* harmony import */ var _PostsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PostsAdmin.vue?vue&type=script&lang=js& */ "./resources/js/components/PostsAdmin.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _PostsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _PostsAdmin_vue_vue_type_template_id_2cb49c32_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _PostsAdmin_vue_vue_type_template_id_2cb49c32_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "2cb49c32",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/PostsAdmin.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/PostsAdmin.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/PostsAdmin.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./PostsAdmin.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostsAdmin.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostsAdmin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostsAdmin_vue_vue_type_template_id_2cb49c32_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/PostsAdmin.vue?vue&type=template&id=2cb49c32&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostsAdmin_vue_vue_type_template_id_2cb49c32_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PostsAdmin_vue_vue_type_template_id_2cb49c32_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
