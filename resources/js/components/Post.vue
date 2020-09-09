@@ -10,7 +10,11 @@
                 <comment-form :success="success" :errors="errors" @add-comment="addComment"></comment-form>
                 <hr>
                 <h2>Commentaires</h2>
-                <comment v-for="comment in comments.data" :comment="comment" :key="comment.id"></comment>
+                <comment v-for="comment in comments.data"
+                         :comment="comment" :key="comment.id"
+                         :success-report="successReport"
+                         @report-comment="reportComment"
+                ></comment>
 
                 <pagination :data="comments" @pagination-change-page="getComments" align="center"></pagination>
 
@@ -49,7 +53,8 @@
                 errors: {
                     errorsName: null,
                     errorsContent: null
-                }
+                },
+                successReport: null
             }
         },
         methods: {
@@ -68,11 +73,22 @@
             reset() {
                 setTimeout(() => {
                     this.success = null;
+                    this.successReport = null;
                 }, 4000);
             },
             getComments(page = 1) {
                 axios.get(`${this.apiCommentGetUrl}?page=${page}`)
                     .then(result => this.comments = result.data)
+            },
+            reportComment(payload) {
+                axios.get(payload.urlApi)
+                    .then(result => {
+                        this.successReport = {
+                            message: result.data.message,
+                            commentId: payload.commentId
+                        };
+                        this.reset(this.successReport);
+                    })
             }
         }
     }

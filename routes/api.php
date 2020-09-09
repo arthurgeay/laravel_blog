@@ -23,6 +23,7 @@ Route::get('/posts', 'PostController@getAllPosts')->name('api.allPosts');
 
 Route::get('/comments/{post}', 'CommentController@index')->name('api.comment.index');
 Route::post('/comments/{post}', 'CommentController@store')->name('api.comment.store');
+Route::get('/comments/{comment}/report','CommentController@report')->name('api.comment.report');
 
 
 Route::middleware('auth:api')->group(function() {

@@ -1919,12 +1919,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Comment",
   props: {
     comment: {
       type: Object,
       required: true
+    },
+    successReport: {
+      type: Object
+    }
+  },
+  methods: {
+    emitReport: function emitReport() {
+      this.$emit('report-comment', {
+        urlApi: this.route('api.comment.report', {
+          comment: this.comment.id
+        }),
+        commentId: this.comment.id
+      });
     }
   }
 });
@@ -2179,6 +2196,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2210,7 +2231,8 @@ __webpack_require__.r(__webpack_exports__);
       errors: {
         errorsName: null,
         errorsContent: null
-      }
+      },
+      successReport: null
     };
   },
   methods: {
@@ -2235,6 +2257,7 @@ __webpack_require__.r(__webpack_exports__);
 
       setTimeout(function () {
         _this2.success = null;
+        _this2.successReport = null;
       }, 4000);
     },
     getComments: function getComments() {
@@ -2243,6 +2266,18 @@ __webpack_require__.r(__webpack_exports__);
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       axios.get("".concat(this.apiCommentGetUrl, "?page=").concat(page)).then(function (result) {
         return _this3.comments = result.data;
+      });
+    },
+    reportComment: function reportComment(payload) {
+      var _this4 = this;
+
+      axios.get(payload.urlApi).then(function (result) {
+        _this4.successReport = {
+          message: result.data.message,
+          commentId: payload.commentId
+        };
+
+        _this4.reset(_this4.successReport);
       });
     }
   }
@@ -39320,6 +39355,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
+    _vm.successReport && _vm.successReport.commentId === _vm.comment.id
+      ? _c("div", { staticClass: "alert alert-warning" }, [
+          _vm._v("\n        " + _vm._s(_vm.successReport.message) + "\n    ")
+        ])
+      : _vm._e(),
+    _vm._v(" "),
     _c("div", { staticClass: "card-body" }, [
       _c("h5", { staticClass: "card-title" }, [
         _vm._v(_vm._s(_vm.comment.name))
@@ -39331,7 +39372,13 @@ var render = function() {
       _vm._v(" "),
       _c("p", { staticClass: "card-text" }, [
         _vm._v(_vm._s(_vm.comment.content))
-      ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "btn btn-secondary", on: { click: _vm.emitReport } },
+        [_vm._v("Signaler le commentaire")]
+      )
     ])
   ])
 }
@@ -39802,7 +39849,8 @@ var render = function() {
           _vm._l(_vm.comments.data, function(comment) {
             return _c("comment", {
               key: comment.id,
-              attrs: { comment: comment }
+              attrs: { comment: comment, "success-report": _vm.successReport },
+              on: { "report-comment": _vm.reportComment }
             })
           }),
           _vm._v(" "),
@@ -52851,6 +52899,11 @@ var Ziggy = {
     "api.comment.store": {
       "uri": "api\/comments\/{post}",
       "methods": ["POST"],
+      "domain": null
+    },
+    "api.comment.report": {
+      "uri": "api\/comments\/{comment}\/report",
+      "methods": ["GET", "HEAD"],
       "domain": null
     },
     "api.post.store": {

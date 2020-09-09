@@ -40,4 +40,24 @@ class CommentController extends Controller
 
         return response()->json(['message' => 'Commentaire ajouté', 'comment' => $comment], 200);
     }
+
+    /**
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * Report a comment
+     */
+    public function report(Comment $comment)
+    {
+        if(!$comment->reports) {
+            $comment->reports = 1;
+        } else {
+            $comment->reports++;
+        }
+
+        $comment->save();
+
+        return response()->json([
+            'message' => 'Commentaire signalé'
+        ]);
+    }
 }
