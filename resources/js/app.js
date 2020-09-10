@@ -29,11 +29,11 @@ Vue.mixin({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 
-Vue.component('post-list', require('./components/PostList').default);
+Vue.component('post-list', require('./components/Post/PostList').default);
 Vue.component('pagination', require('laravel-vue-pagination'));
-Vue.component('post', require('./components/Post').default);
-Vue.component('post-form', require('./components/PostForm').default);
-Vue.component('dashboard', require('./components/Dashboard').default);
+Vue.component('post', require('./components/Post/Post').default);
+Vue.component('post-form', require('./components/Post/PostForm').default);
+Vue.component('dashboard', require('./components/Admin/Dashboard').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
