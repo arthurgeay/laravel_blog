@@ -33,6 +33,8 @@ Route::middleware('auth:api')->group(function() {
 
    Route::get('/posts/mine', 'HomeController@getAllPostForAuthUser')->name('api.allPosts.owner');
    Route::delete('/posts/{post}', 'PostController@destroy')->name('api.post.destroy')->middleware('owner.post');
+
+   Route::delete('/comments/{comment}', 'CommentController@destroy')->name('api.comment.destroy')->middleware('owner.post');
 });
 
 Route::get('/comments/{post}', 'CommentController@index')->name('api.comment.index');

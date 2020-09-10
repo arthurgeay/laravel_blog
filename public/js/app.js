@@ -2068,18 +2068,73 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CommentsAdmin",
   props: {
     dataComments: {
-      type: Array,
-      required: false
+      required: true
+    },
+    apiToken: {
+      type: String,
+      required: true
     }
   },
   data: function data() {
     return {
-      comments: this.dataComments
+      success: null,
+      error: null
     };
+  },
+  methods: {
+    deleteComment: function deleteComment(id, index) {
+      var _this = this;
+
+      axios["delete"](this.route('api.comment.destroy', {
+        api_token: this.apiToken,
+        comment: 9
+      })).then(function (result) {
+        _this.dataComments.splice(index, 1);
+
+        _this.success = result.data.message;
+
+        _this.reset();
+      })["catch"](function (error) {
+        return _this.error = "Une erreur s'est produite. Veuillez réessayer.";
+      });
+    },
+    reset: function reset() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        _this2.success = null;
+        _this2.error = null;
+      }, 4000);
+    }
   }
 });
 
@@ -2155,9 +2210,6 @@ __webpack_require__.r(__webpack_exports__);
         return _this.comments = result.data;
       });
     }
-  },
-  mounted: function mounted() {
-    this.getReportComments();
   }
 });
 
@@ -39676,13 +39728,25 @@ var render = function() {
         _vm._v("Les commentaires signalés")
       ]),
       _vm._v(" "),
+      _vm.success
+        ? _c("div", { staticClass: "alert alert-success" }, [
+            _vm._v("\n            " + _vm._s(_vm.success) + "\n        ")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.error
+        ? _c("div", { staticClass: "alert alert-danger" }, [
+            _vm._v("\n            " + _vm._s(_vm.error) + "\n        ")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
         _c("table", { staticClass: "table" }, [
           _vm._m(0),
           _vm._v(" "),
           _c(
             "tbody",
-            _vm._l(_vm.dataComments, function(comment) {
+            _vm._l(_vm.dataComments, function(comment, index) {
               return _c("tr", [
                 _c("th", { attrs: { scope: "row" } }, [
                   _c(
@@ -39756,14 +39820,74 @@ var render = function() {
                           "a",
                           {
                             staticClass: "dropdown-item text-danger",
-                            attrs: { href: "#" }
+                            attrs: {
+                              href: "#",
+                              "data-toggle": "modal",
+                              "data-target": "#modal-" + comment.id
+                            }
                           },
                           [_vm._v("Supprimer")]
                         )
                       ]
                     )
                   ])
-                ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal fade",
+                    attrs: {
+                      id: "modal-" + comment.id,
+                      tabindex: "-1",
+                      "aria-labelledby": "exampleModalLabel",
+                      "aria-hidden": "true"
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "modal-dialog" }, [
+                      _c("div", { staticClass: "modal-content" }, [
+                        _vm._m(1, true),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "modal-body" }, [
+                          _vm._v(
+                            '\n                                    Voulez vous supprimer définitivement le commentaire qui a pour contenu : "' +
+                              _vm._s(comment.content) +
+                              '" ?\n                                '
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "modal-footer" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-secondary",
+                              attrs: { type: "button", "data-dismiss": "modal" }
+                            },
+                            [_vm._v("Annuler")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-danger",
+                              attrs: {
+                                type: "button",
+                                "data-dismiss": "modal"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteComment(comment.id, index)
+                                }
+                              }
+                            },
+                            [_vm._v("Supprimer")]
+                          )
+                        ])
+                      ])
+                    ])
+                  ]
+                )
               ])
             }),
             0
@@ -39791,6 +39915,31 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Actions")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Suppression d'un commentaire")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
   }
 ]
 render._withStripped = true
@@ -39817,7 +39966,39 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-md-8" }, [
-        _vm._m(0),
+        _c(
+          "ul",
+          {
+            staticClass: "nav nav-tabs justify-content-center",
+            attrs: { id: "myTab", role: "tablist" }
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "nav-item", attrs: { role: "presentation" } },
+              [
+                _c(
+                  "a",
+                  {
+                    staticClass: "nav-link",
+                    attrs: {
+                      id: "comments-tab",
+                      "data-toggle": "tab",
+                      href: "#comments",
+                      role: "tab",
+                      "aria-controls": "comments",
+                      "aria-selected": "false"
+                    },
+                    on: { click: _vm.getReportComments }
+                  },
+                  [_vm._v("Commentaires")]
+                )
+              ]
+            )
+          ]
+        ),
         _vm._v(" "),
         _c(
           "div",
@@ -39856,7 +40037,10 @@ var render = function() {
               },
               [
                 _c("comments-admin", {
-                  attrs: { "data-comments": _vm.comments }
+                  attrs: {
+                    "data-comments": _vm.comments,
+                    "api-token": _vm.apiToken
+                  }
                 })
               ],
               1
@@ -39873,47 +40057,24 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c(
-      "ul",
-      {
-        staticClass: "nav nav-tabs justify-content-center",
-        attrs: { id: "myTab", role: "tablist" }
-      },
+      "li",
+      { staticClass: "nav-item", attrs: { role: "presentation" } },
       [
-        _c("li", { staticClass: "nav-item", attrs: { role: "presentation" } }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link active",
-              attrs: {
-                id: "posts-tab",
-                "data-toggle": "tab",
-                href: "#posts",
-                role: "tab",
-                "aria-controls": "posts",
-                "aria-selected": "true"
-              }
-            },
-            [_vm._v("Articles")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item", attrs: { role: "presentation" } }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: {
-                id: "comments-tab",
-                "data-toggle": "tab",
-                href: "#comments",
-                role: "tab",
-                "aria-controls": "comments",
-                "aria-selected": "false"
-              }
-            },
-            [_vm._v("Commentaires")]
-          )
-        ])
+        _c(
+          "a",
+          {
+            staticClass: "nav-link active",
+            attrs: {
+              id: "posts-tab",
+              "data-toggle": "tab",
+              href: "#posts",
+              role: "tab",
+              "aria-controls": "posts",
+              "aria-selected": "true"
+            }
+          },
+          [_vm._v("Articles")]
+        )
       ]
     )
   }
@@ -53426,11 +53587,6 @@ var Ziggy = {
       "methods": ["GET", "HEAD"],
       "domain": null
     },
-    "api.comment.index": {
-      "uri": "api\/comments\/{post}",
-      "methods": ["GET", "HEAD"],
-      "domain": null
-    },
     "api.comment.store": {
       "uri": "api\/comments\/{post}",
       "methods": ["POST"],
@@ -53438,6 +53594,11 @@ var Ziggy = {
     },
     "api.comment.report": {
       "uri": "api\/comments\/{comment}\/report",
+      "methods": ["GET", "HEAD"],
+      "domain": null
+    },
+    "api.comment.report.index": {
+      "uri": "api\/comments\/reports",
       "methods": ["GET", "HEAD"],
       "domain": null
     },
@@ -53461,8 +53622,13 @@ var Ziggy = {
       "methods": ["DELETE"],
       "domain": null
     },
-    "api.comment.report.index": {
-      "uri": "api\/comments\/reports",
+    "api.comment.destroy": {
+      "uri": "api\/comments\/{comment}",
+      "methods": ["DELETE"],
+      "domain": null
+    },
+    "api.comment.index": {
+      "uri": "api\/comments\/{post}",
       "methods": ["GET", "HEAD"],
       "domain": null
     },

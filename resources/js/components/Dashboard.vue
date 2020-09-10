@@ -7,7 +7,7 @@
                         <a class="nav-link active" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Articles</a>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Commentaires</a>
+                        <a @click="getReportComments" class="nav-link" id="comments-tab" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Commentaires</a>
                     </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
@@ -15,7 +15,7 @@
                         <posts-admin :data-posts="dataPosts" :api-token="apiToken"></posts-admin>
                     </div>
                     <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-                        <comments-admin :data-comments="comments"></comments-admin>
+                        <comments-admin :data-comments="comments" :api-token="apiToken"></comments-admin>
                     </div>
                 </div>
             </div>
@@ -55,9 +55,6 @@
                     .then(result => this.comments = result.data)
             }
         },
-        mounted() {
-            this.getReportComments();
-        }
 
     }
 </script>

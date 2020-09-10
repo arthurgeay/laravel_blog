@@ -18,6 +18,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = $this->getAllPosts();
+        $test = Comment::with('post')->where('id', 1)->first();
+        dd($test->post->user_id);
 
         return view('posts.index', [
             'posts' => json_encode($posts),

@@ -82,4 +82,16 @@ class CommentController extends Controller
 
         return $comments;
     }
+
+    /**
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     * Delete a comment
+     */
+    public function destroy(Comment $comment) {
+        $comment->delete();
+
+        return response()->json(['message' => 'Commentaire supprimé'], 200);
+    }
 }

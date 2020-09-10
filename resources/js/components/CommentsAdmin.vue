@@ -2,6 +2,12 @@
     <div>
         <div class="card">
             <div class="card-header">Les commentaires signalés</div>
+            <div v-if="success" class="alert alert-success">
+                {{ success }}
+            </div>
+            <div v-if="error" class="alert alert-danger">
+                {{ error }}
+            </div>
             <div class="card-body">
                 <table class="table">
                     <thead>
@@ -14,7 +20,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="comment in dataComments">
+                    <tr v-for="(comment, index) in dataComments">
                         <th scope="row"><a :href="route('post.show', {post: comment.post_id })">{{ comment.title }}</a></th>
                         <td>{{ comment.name }}</td>
                         <td>{{ comment.content }}</td>
@@ -27,11 +33,30 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" :href="route('post.show', {post: comment.post_id })">Voir l'article</a>
                                     <a class="dropdown-item text-info" href="#">Ignorer le commentaire</a>
-                                    <a class="dropdown-item text-danger" href="#">Supprimer</a>
+                                    <a class="dropdown-item text-danger" href="#" data-toggle="modal" :data-target="`#modal-${comment.id}`">Supprimer</a>
                                 </div>
 
                             </div>
                         </td>
+                        <div class="modal fade" :id="`modal-${comment.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Suppression d'un commentaire</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Voulez vous supprimer définitivement le commentaire qui a pour contenu : "{{ comment.content }}" ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal" @click="deleteComment(comment.id, index)">Supprimer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                     </tbody>
                 </table>
@@ -46,13 +71,35 @@
         name: "CommentsAdmin",
         props: {
             dataComments: {
-                type: Array,
-                required: false
-            }
+                required: true
+            },
+            apiToken: {
+                type: String,
+                required: true
+            },
         },
         data() {
             return {
-                comments: this.dataComments
+                success: null,
+                error: null
+            }
+        },
+        methods: {
+            deleteComment(id, index)
+            {
+                axios.delete(this.route('api.comment.destroy', { api_token: this.apiToken, comment: 9 }))
+                    .then(result => {
+                        this.dataComments.splice(index, 1);
+                        this.success = result.data.message;
+                        this.reset();
+                    })
+                    .catch(error => this.error = "Une erreur s'est produite. Veuillez réessayer.")
+            },
+            reset() {
+                setTimeout(() => {
+                    this.success = null;
+                    this.error = null;
+                }, 4000);
             }
         }
     }
