@@ -32,7 +32,7 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" :href="route('post.show', {post: comment.post_id })">Voir l'article</a>
-                                    <a class="dropdown-item text-info" href="#">Ignorer le commentaire</a>
+                                    <a class="dropdown-item text-info" href="#" data-toggle="modal" :data-target="`#modal-ignore-${comment.id}`">Ignorer le commentaire</a>
                                     <a class="dropdown-item text-danger" href="#" data-toggle="modal" :data-target="`#modal-${comment.id}`">Supprimer</a>
                                 </div>
 
@@ -53,6 +53,25 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                         <button type="button" class="btn btn-danger" data-dismiss="modal" @click="deleteComment(comment.id, index)">Supprimer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" :id="`modal-ignore-${comment.id}`" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLaebl">Suppression d'un commentaire</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Voulez vous ignore le commentaire signalé qui a pour contenu : "{{ comment.content }}" ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="resetComment(comment.id, index)">Ignorer</button>
                                     </div>
                                 </div>
                             </div>
@@ -100,6 +119,15 @@
                     this.success = null;
                     this.error = null;
                 }, 4000);
+            },
+            resetComment(id, index) {
+                axios.get(this.route('api.comment.report.reset', { api_token: this.apiToken, comment: id}))
+                    .then(result => {
+                        this.dataComments.splice(index, 1);
+                        this.success = result.data.message;
+                        this.reset();
+                    })
+                    .catch(error => this.error = "Une erreur s'est produite. Veuillez réessayer")
             }
         }
     }

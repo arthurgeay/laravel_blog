@@ -2093,6 +2093,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CommentsAdmin",
   props: {
@@ -2134,6 +2153,22 @@ __webpack_require__.r(__webpack_exports__);
         _this2.success = null;
         _this2.error = null;
       }, 4000);
+    },
+    resetComment: function resetComment(id, index) {
+      var _this3 = this;
+
+      axios.get(this.route('api.comment.report.reset', {
+        api_token: this.apiToken,
+        comment: id
+      })).then(function (result) {
+        _this3.dataComments.splice(index, 1);
+
+        _this3.success = result.data.message;
+
+        _this3.reset();
+      })["catch"](function (error) {
+        return _this3.error = "Une erreur s'est produite. Veuillez réessayer";
+      });
     }
   }
 });
@@ -39811,7 +39846,11 @@ var render = function() {
                           "a",
                           {
                             staticClass: "dropdown-item text-info",
-                            attrs: { href: "#" }
+                            attrs: {
+                              href: "#",
+                              "data-toggle": "modal",
+                              "data-target": "#modal-ignore-" + comment.id
+                            }
                           },
                           [_vm._v("Ignorer le commentaire")]
                         ),
@@ -39887,6 +39926,62 @@ var render = function() {
                       ])
                     ])
                   ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal fade",
+                    attrs: {
+                      id: "modal-ignore-" + comment.id,
+                      tabindex: "-1",
+                      "aria-labelledby": "modalLabel",
+                      "aria-hidden": "true"
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "modal-dialog" }, [
+                      _c("div", { staticClass: "modal-content" }, [
+                        _vm._m(2, true),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "modal-body" }, [
+                          _vm._v(
+                            '\n                                    Voulez vous ignore le commentaire signalé qui a pour contenu : "' +
+                              _vm._s(comment.content) +
+                              '" ?\n                                '
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "modal-footer" }, [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-secondary",
+                              attrs: { type: "button", "data-dismiss": "modal" }
+                            },
+                            [_vm._v("Annuler")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              attrs: {
+                                type: "button",
+                                "data-dismiss": "modal"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.resetComment(comment.id, index)
+                                }
+                              }
+                            },
+                            [_vm._v("Ignorer")]
+                          )
+                        ])
+                      ])
+                    ])
+                  ]
                 )
               ])
             }),
@@ -39926,6 +40021,29 @@ var staticRenderFns = [
         { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
         [_vm._v("Suppression d'un commentaire")]
       ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title", attrs: { id: "modalLaebl" } }, [
+        _vm._v("Suppression d'un commentaire")
+      ]),
       _vm._v(" "),
       _c(
         "button",
@@ -53625,6 +53743,11 @@ var Ziggy = {
     "api.comment.destroy": {
       "uri": "api\/comments\/{comment}",
       "methods": ["DELETE"],
+      "domain": null
+    },
+    "api.comment.report.reset": {
+      "uri": "api\/comments\/{comment}\/report\/reset",
+      "methods": ["GET", "HEAD"],
       "domain": null
     },
     "api.comment.index": {

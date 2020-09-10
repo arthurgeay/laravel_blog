@@ -94,4 +94,16 @@ class CommentController extends Controller
 
         return response()->json(['message' => 'Commentaire supprimé'], 200);
     }
+
+    /**
+     * @param Comment $comment
+     * @return \Illuminate\Http\JsonResponse
+     * Reset number of reports to a comment
+     */
+    public function resetCommentReport(Comment $comment) {
+        $comment->reports = null;
+        $comment->save();
+
+        return response()->json(['message' => 'Commentaire ignoré et remise à zéro des signalements']);
+    }
 }

@@ -35,6 +35,7 @@ Route::middleware('auth:api')->group(function() {
    Route::delete('/posts/{post}', 'PostController@destroy')->name('api.post.destroy')->middleware('owner.post');
 
    Route::delete('/comments/{comment}', 'CommentController@destroy')->name('api.comment.destroy')->middleware('owner.post');
+   Route::get('/comments/{comment}/report/reset', 'CommentController@resetCommentReport')->name('api.comment.report.reset')->middleware('owner.post');
 });
 
 Route::get('/comments/{post}', 'CommentController@index')->name('api.comment.index');
