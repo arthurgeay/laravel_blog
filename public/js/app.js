@@ -2116,6 +2116,7 @@ __webpack_require__.r(__webpack_exports__);
   name: "CommentsAdmin",
   props: {
     dataComments: {
+      type: Object,
       required: true
     },
     apiToken: {
@@ -2125,9 +2126,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      comments: this.dataComments,
       success: null,
       error: null
     };
+  },
+  watch: {
+    dataComments: function dataComments() {
+      this.comments = this.dataComments;
+    }
   },
   methods: {
     deleteComment: function deleteComment(id, index) {
@@ -2135,15 +2142,21 @@ __webpack_require__.r(__webpack_exports__);
 
       axios["delete"](this.route('api.comment.destroy', {
         api_token: this.apiToken,
-        comment: 9
+        comment: id
       })).then(function (result) {
-        _this.dataComments.splice(index, 1);
+        _this.comments.data.splice(index, 1);
 
         _this.success = result.data.message;
 
-        _this.reset();
+        _this.reset(); // Refresh pagination when all comments of the page are deleted or ignored
+
+
+        if (_this.comments.data.length === 0 && _this.comments.current_page > 1) {
+          _this.getReportComments(_this.comments.current_page - 1);
+        }
       })["catch"](function (error) {
-        return _this.error = "Une erreur s'est produite. Veuillez réessayer.";
+        console.log(error);
+        _this.error = "Une erreur s'est produite. Veuillez réessayer.";
       });
     },
     reset: function reset() {
@@ -2161,13 +2174,29 @@ __webpack_require__.r(__webpack_exports__);
         api_token: this.apiToken,
         comment: id
       })).then(function (result) {
-        _this3.dataComments.splice(index, 1);
+        _this3.comments.data.splice(index, 1);
 
         _this3.success = result.data.message;
 
-        _this3.reset();
+        _this3.reset(); // Refresh pagination when all comments of the page are deleted or ignored
+
+
+        if (_this3.comments.data.length === 0 && _this3.comments.current_page > 1) {
+          _this3.getReportComments(_this3.comments.current_page - 1);
+        }
       })["catch"](function (error) {
         return _this3.error = "Une erreur s'est produite. Veuillez réessayer";
+      });
+    },
+    getReportComments: function getReportComments() {
+      var _this4 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get(this.route('api.comment.report.index', {
+        api_token: this.apiToken,
+        page: page
+      })).then(function (result) {
+        return _this4.comments = result.data;
       });
     }
   }
@@ -2234,7 +2263,7 @@ __webpack_require__.r(__webpack_exports__);
       urlGetCommentsApi: this.route('api.comment.report.index', {
         api_token: this.apiToken
       }),
-      comments: null
+      comments: {}
     };
   },
   methods: {
@@ -39757,240 +39786,257 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _vm._v("Les commentaires signalés")
-      ]),
-      _vm._v(" "),
-      _vm.success
-        ? _c("div", { staticClass: "alert alert-success" }, [
-            _vm._v("\n            " + _vm._s(_vm.success) + "\n        ")
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.error
-        ? _c("div", { staticClass: "alert alert-danger" }, [
-            _vm._v("\n            " + _vm._s(_vm.error) + "\n        ")
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c("table", { staticClass: "table" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.dataComments, function(comment, index) {
-              return _c("tr", [
-                _c("th", { attrs: { scope: "row" } }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: {
-                        href: _vm.route("post.show", { post: comment.post_id })
-                      }
-                    },
-                    [_vm._v(_vm._s(comment.title))]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(comment.name))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(comment.content))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(comment.reports))]),
-                _vm._v(" "),
-                _c("td", [
-                  _c("div", { staticClass: "dropdown" }, [
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-header" }, [
+          _vm._v("Les commentaires signalés")
+        ]),
+        _vm._v(" "),
+        _vm.success
+          ? _c("div", { staticClass: "alert alert-success" }, [
+              _vm._v("\n            " + _vm._s(_vm.success) + "\n        ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.error
+          ? _c("div", { staticClass: "alert alert-danger" }, [
+              _vm._v("\n            " + _vm._s(_vm.error) + "\n        ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c("table", { staticClass: "table" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.comments.data, function(comment, index) {
+                return _c("tr", [
+                  _c("th", { attrs: { scope: "row" } }, [
                     _c(
-                      "button",
+                      "a",
                       {
-                        staticClass: "btn btn-success dropdown-toggle",
                         attrs: {
-                          type: "button",
-                          id: "dropdownMenuButton",
-                          "data-toggle": "dropdown",
-                          "aria-haspopup": "true",
-                          "aria-expanded": "false"
+                          href: _vm.route("post.show", {
+                            post: comment.post_id
+                          })
                         }
                       },
-                      [
-                        _vm._v(
-                          "\n                                Actions\n                            "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "dropdown-menu",
-                        attrs: { "aria-labelledby": "dropdownMenuButton" }
-                      },
-                      [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "dropdown-item",
-                            attrs: {
-                              href: _vm.route("post.show", {
-                                post: comment.post_id
-                              })
-                            }
-                          },
-                          [_vm._v("Voir l'article")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "dropdown-item text-info",
-                            attrs: {
-                              href: "#",
-                              "data-toggle": "modal",
-                              "data-target": "#modal-ignore-" + comment.id
-                            }
-                          },
-                          [_vm._v("Ignorer le commentaire")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "dropdown-item text-danger",
-                            attrs: {
-                              href: "#",
-                              "data-toggle": "modal",
-                              "data-target": "#modal-" + comment.id
-                            }
-                          },
-                          [_vm._v("Supprimer")]
-                        )
-                      ]
+                      [_vm._v(_vm._s(comment.title))]
                     )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "modal fade",
-                    attrs: {
-                      id: "modal-" + comment.id,
-                      tabindex: "-1",
-                      "aria-labelledby": "exampleModalLabel",
-                      "aria-hidden": "true"
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "modal-dialog" }, [
-                      _c("div", { staticClass: "modal-content" }, [
-                        _vm._m(1, true),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "modal-body" }, [
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(comment.name))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(comment.content))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(comment.reports))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("div", { staticClass: "dropdown" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success dropdown-toggle",
+                          attrs: {
+                            type: "button",
+                            id: "dropdownMenuButton",
+                            "data-toggle": "dropdown",
+                            "aria-haspopup": "true",
+                            "aria-expanded": "false"
+                          }
+                        },
+                        [
                           _vm._v(
-                            '\n                                    Voulez vous supprimer définitivement le commentaire qui a pour contenu : "' +
-                              _vm._s(comment.content) +
-                              '" ?\n                                '
+                            "\n                                Actions\n                            "
                           )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "modal-footer" }, [
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "dropdown-menu",
+                          attrs: { "aria-labelledby": "dropdownMenuButton" }
+                        },
+                        [
                           _c(
-                            "button",
+                            "a",
                             {
-                              staticClass: "btn btn-secondary",
-                              attrs: { type: "button", "data-dismiss": "modal" }
+                              staticClass: "dropdown-item",
+                              attrs: {
+                                href: _vm.route("post.show", {
+                                  post: comment.post_id
+                                })
+                              }
                             },
-                            [_vm._v("Annuler")]
+                            [_vm._v("Voir l'article")]
                           ),
                           _vm._v(" "),
                           _c(
-                            "button",
+                            "a",
                             {
-                              staticClass: "btn btn-danger",
+                              staticClass: "dropdown-item text-info",
                               attrs: {
-                                type: "button",
-                                "data-dismiss": "modal"
-                              },
-                              on: {
-                                click: function($event) {
-                                  return _vm.deleteComment(comment.id, index)
-                                }
+                                href: "#",
+                                "data-toggle": "modal",
+                                "data-target": "#modal-ignore-" + comment.id
+                              }
+                            },
+                            [_vm._v("Ignorer le commentaire")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "dropdown-item text-danger",
+                              attrs: {
+                                href: "#",
+                                "data-toggle": "modal",
+                                "data-target": "#modal-" + comment.id
                               }
                             },
                             [_vm._v("Supprimer")]
                           )
-                        ])
-                      ])
+                        ]
+                      )
                     ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "modal fade",
-                    attrs: {
-                      id: "modal-ignore-" + comment.id,
-                      tabindex: "-1",
-                      "aria-labelledby": "modalLabel",
-                      "aria-hidden": "true"
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "modal-dialog" }, [
-                      _c("div", { staticClass: "modal-content" }, [
-                        _vm._m(2, true),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "modal-body" }, [
-                          _vm._v(
-                            '\n                                    Voulez vous ignore le commentaire signalé qui a pour contenu : "' +
-                              _vm._s(comment.content) +
-                              '" ?\n                                '
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "modal-footer" }, [
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-secondary",
-                              attrs: { type: "button", "data-dismiss": "modal" }
-                            },
-                            [_vm._v("Annuler")]
-                          ),
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal fade",
+                      attrs: {
+                        id: "modal-" + comment.id,
+                        tabindex: "-1",
+                        "aria-labelledby": "exampleModalLabel",
+                        "aria-hidden": "true"
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-dialog" }, [
+                        _c("div", { staticClass: "modal-content" }, [
+                          _vm._m(1, true),
                           _vm._v(" "),
-                          _c(
-                            "button",
-                            {
-                              staticClass: "btn btn-primary",
-                              attrs: {
-                                type: "button",
-                                "data-dismiss": "modal"
-                              },
-                              on: {
-                                click: function($event) {
-                                  return _vm.resetComment(comment.id, index)
+                          _c("div", { staticClass: "modal-body" }, [
+                            _vm._v(
+                              '\n                                    Voulez vous supprimer définitivement le commentaire qui a pour contenu : "' +
+                                _vm._s(comment.content) +
+                                '" ?\n                                '
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-footer" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-secondary",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal"
                                 }
-                              }
-                            },
-                            [_vm._v("Ignorer")]
-                          )
+                              },
+                              [_vm._v("Annuler")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-danger",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.deleteComment(comment.id, index)
+                                  }
+                                }
+                              },
+                              [_vm._v("Supprimer")]
+                            )
+                          ])
                         ])
                       ])
-                    ])
-                  ]
-                )
-              ])
-            }),
-            0
-          )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal fade",
+                      attrs: {
+                        id: "modal-ignore-" + comment.id,
+                        tabindex: "-1",
+                        "aria-labelledby": "modalLabel",
+                        "aria-hidden": "true"
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-dialog" }, [
+                        _c("div", { staticClass: "modal-content" }, [
+                          _vm._m(2, true),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-body" }, [
+                            _vm._v(
+                              '\n                                    Voulez vous ignore le commentaire signalé qui a pour contenu : "' +
+                                _vm._s(comment.content) +
+                                '" ?\n                                '
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "modal-footer" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-secondary",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal"
+                                }
+                              },
+                              [_vm._v("Annuler")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass: "btn btn-primary",
+                                attrs: {
+                                  type: "button",
+                                  "data-dismiss": "modal"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.resetComment(comment.id, index)
+                                  }
+                                }
+                              },
+                              [_vm._v("Ignorer")]
+                            )
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                ])
+              }),
+              0
+            )
+          ])
         ])
-      ])
-    ])
-  ])
+      ]),
+      _vm._v(" "),
+      _c("pagination", {
+        attrs: { data: _vm.comments, align: "center" },
+        on: { "pagination-change-page": _vm.getReportComments }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -40158,6 +40204,14 @@ var render = function() {
                   attrs: {
                     "data-comments": _vm.comments,
                     "api-token": _vm.apiToken
+                  },
+                  on: {
+                    "update:dataComments": function($event) {
+                      _vm.comments = $event
+                    },
+                    "update:data-comments": function($event) {
+                      _vm.comments = $event
+                    }
                   }
                 })
               ],

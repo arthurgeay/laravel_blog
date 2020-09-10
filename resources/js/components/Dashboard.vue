@@ -15,7 +15,7 @@
                         <posts-admin :data-posts="dataPosts" :api-token="apiToken"></posts-admin>
                     </div>
                     <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-                        <comments-admin :data-comments="comments" :api-token="apiToken"></comments-admin>
+                        <comments-admin :data-comments.sync="comments" :api-token="apiToken"></comments-admin>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
         data() {
             return {
                 urlGetCommentsApi: this.route('api.comment.report.index', { api_token: this.apiToken}),
-                comments: null
+                comments: {}
             }
         },
         methods: {

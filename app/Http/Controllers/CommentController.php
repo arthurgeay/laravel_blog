@@ -64,7 +64,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      * Return all reported comments on posts by author
      */
     public function getReportsComments()
@@ -78,7 +78,7 @@ class CommentController extends Controller
             ->where('reports', '<>', 'NULL')
             ->where('users.id', '=', $userId)
             ->orderBy('reports', 'desc')
-            ->get();
+            ->paginate(10);
 
         return $comments;
     }

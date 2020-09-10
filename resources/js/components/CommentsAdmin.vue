@@ -20,7 +20,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="(comment, index) in dataComments">
+                    <tr v-for="(comment, index) in comments.data">
                         <th scope="row"><a :href="route('post.show', {post: comment.post_id })">{{ comment.title }}</a></th>
                         <td>{{ comment.name }}</td>
                         <td>{{ comment.content }}</td>
@@ -81,7 +81,7 @@
                 </table>
             </div>
         </div>
-
+        <pagination :data="comments" @pagination-change-page="getReportComments" align="center"></pagination>
     </div>
 </template>
 
@@ -90,6 +90,7 @@
         name: "CommentsAdmin",
         props: {
             dataComments: {
+                type: Object,
                 required: true
             },
             apiToken: {
@@ -99,20 +100,34 @@
         },
         data() {
             return {
+                comments: this.dataComments,
                 success: null,
-                error: null
+                error: null,
+            }
+        },
+        watch: {
+            dataComments: function() {
+                this.comments = this.dataComments;
             }
         },
         methods: {
             deleteComment(id, index)
             {
-                axios.delete(this.route('api.comment.destroy', { api_token: this.apiToken, comment: 9 }))
+                axios.delete(this.route('api.comment.destroy', { api_token: this.apiToken, comment: id }))
                     .then(result => {
-                        this.dataComments.splice(index, 1);
+                        this.comments.data.splice(index, 1);
                         this.success = result.data.message;
                         this.reset();
+
+                        // Refresh pagination when all comments of the page are deleted or ignored
+                        if(this.comments.data.length === 0 && this.comments.current_page > 1) {
+                            this.getReportComments(this.comments.current_page - 1);
+                        }
                     })
-                    .catch(error => this.error = "Une erreur s'est produite. Veuillez réessayer.")
+                    .catch(error => {
+                        console.log(error);
+                        this.error = "Une erreur s'est produite. Veuillez réessayer.";
+                    })
             },
             reset() {
                 setTimeout(() => {
@@ -123,12 +138,21 @@
             resetComment(id, index) {
                 axios.get(this.route('api.comment.report.reset', { api_token: this.apiToken, comment: id}))
                     .then(result => {
-                        this.dataComments.splice(index, 1);
+                        this.comments.data.splice(index, 1);
                         this.success = result.data.message;
                         this.reset();
+
+                        // Refresh pagination when all comments of the page are deleted or ignored
+                        if(this.comments.data.length === 0 && this.comments.current_page > 1) {
+                            this.getReportComments(this.comments.current_page - 1);
+                        }
                     })
                     .catch(error => this.error = "Une erreur s'est produite. Veuillez réessayer")
-            }
+            },
+            getReportComments(page = 1) {
+                axios.get(this.route('api.comment.report.index', { api_token: this.apiToken, page: page}))
+                    .then(result => this.comments = result.data)
+            },
         }
     }
 </script>
