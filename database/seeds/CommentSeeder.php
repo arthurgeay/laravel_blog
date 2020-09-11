@@ -23,5 +23,16 @@ class CommentSeeder extends Seeder
                 'reports' => $faker->boolean() ? $faker->numberBetween(1, 15) : null
             ]);
         }
+
+        for($i = 0; $i < 50; $i++) {
+            DB::table('comments')->insert([
+                'name' => $faker->name,
+                'content' => $faker->text(40),
+                'created_at' => $faker->dateTime,
+                'post_id' => $faker->numberBetween(1, 20),
+                'reports' => $faker->boolean() ? $faker->numberBetween(1, 15) : null,
+                'parent_id' => $faker->numberBetween(1, 100)
+            ]);
+        }
     }
 }

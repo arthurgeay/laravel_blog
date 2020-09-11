@@ -12,7 +12,8 @@ class Comment extends Model
         'name',
         'content',
         'post_id',
-        'reports'
+        'reports',
+        'parent_id'
     ];
 
     public function getCreatedAtAttribute($value)
