@@ -2329,6 +2329,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Comment",
   props: {
@@ -2338,15 +2351,18 @@ __webpack_require__.r(__webpack_exports__);
     },
     successReport: {
       type: Object
+    },
+    parentComment: {
+      type: Object
     }
   },
   methods: {
-    emitReport: function emitReport() {
+    emitReport: function emitReport(comment) {
       this.$emit('report-comment', {
         urlApi: this.route('api.comment.report', {
-          comment: this.comment.id
+          comment: comment.id
         }),
-        commentId: this.comment.id
+        commentId: comment.id
       });
     }
   }
@@ -2530,6 +2546,7 @@ __webpack_require__.r(__webpack_exports__);
     reportComment: function reportComment(payload) {
       var _this4 = this;
 
+      console.log(payload);
       axios.get(payload.urlApi).then(function (result) {
         _this4.successReport = {
           message: result.data.message,
@@ -40367,33 +40384,73 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _vm.successReport && _vm.successReport.commentId === _vm.comment.id
-      ? _c("div", { staticClass: "alert alert-warning" }, [
-          _vm._v("\n        " + _vm._s(_vm.successReport.message) + "\n    ")
+  return _c(
+    "div",
+    { class: { "ml-5": _vm.parentComment } },
+    [
+      _c("div", { staticClass: "card" }, [
+        _vm.successReport && _vm.successReport.commentId === _vm.comment.id
+          ? _c("div", { staticClass: "alert alert-warning" }, [
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.successReport.message) +
+                  "\n        "
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _vm.parentComment
+            ? _c("h4", [
+                _vm._v("En réponse à " + _vm._s(_vm.parentComment.name))
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c("h5", { staticClass: "card-title" }, [
+            _vm._v(_vm._s(_vm.comment.name))
+          ]),
+          _vm._v(" "),
+          _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
+            _vm._v(_vm._s(_vm.comment.created_at))
+          ]),
+          _vm._v(" "),
+          _c("p", { staticClass: "card-text" }, [
+            _vm._v(_vm._s(_vm.comment.content))
+          ]),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-secondary",
+              on: {
+                click: function($event) {
+                  return _vm.emitReport(_vm.comment)
+                }
+              }
+            },
+            [_vm._v("Signaler le commentaire")]
+          )
         ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("div", { staticClass: "card-body" }, [
-      _c("h5", { staticClass: "card-title" }, [
-        _vm._v(_vm._s(_vm.comment.name))
       ]),
       _vm._v(" "),
-      _c("h6", { staticClass: "card-subtitle mb-2 text-muted" }, [
-        _vm._v(_vm._s(_vm.comment.created_at))
-      ]),
-      _vm._v(" "),
-      _c("p", { staticClass: "card-text" }, [
-        _vm._v(_vm._s(_vm.comment.content))
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-secondary", on: { click: _vm.emitReport } },
-        [_vm._v("Signaler le commentaire")]
-      )
-    ])
-  ])
+      _vm._l(_vm.comment.children, function(children) {
+        return _c("comment", {
+          key: children.id,
+          attrs: {
+            comment: children,
+            "success-report": _vm.successReport,
+            "parent-comment": _vm.comment
+          },
+          on: {
+            "report-comment": function($event) {
+              return _vm.emitReport(children)
+            }
+          }
+        })
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

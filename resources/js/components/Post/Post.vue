@@ -81,6 +81,7 @@
                     .then(result => this.comments = result.data)
             },
             reportComment(payload) {
+                console.log(payload);
                 axios.get(payload.urlApi)
                     .then(result => {
                         this.successReport = {
