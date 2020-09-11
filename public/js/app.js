@@ -2342,6 +2342,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Comment",
   props: {
@@ -2530,6 +2531,8 @@ __webpack_require__.r(__webpack_exports__);
     reset: function reset() {
       var _this2 = this;
 
+      this.errors.errorsName = null;
+      this.errors.errorsContent = null;
       setTimeout(function () {
         _this2.success = null;
         _this2.successReport = null;
@@ -2546,7 +2549,6 @@ __webpack_require__.r(__webpack_exports__);
     reportComment: function reportComment(payload) {
       var _this4 = this;
 
-      console.log(payload);
       axios.get(payload.urlApi).then(function (result) {
         _this4.successReport = {
           message: result.data.message,
@@ -40416,6 +40418,10 @@ var render = function() {
           _vm._v(" "),
           _c("p", { staticClass: "card-text" }, [
             _vm._v(_vm._s(_vm.comment.content))
+          ]),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn btn-primary" }, [
+            _vm._v("Répondre")
           ]),
           _vm._v(" "),
           _c(
