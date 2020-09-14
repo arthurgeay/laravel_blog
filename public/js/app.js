@@ -2314,6 +2314,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CommentForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CommentForm */ "./resources/js/components/Comment/CommentForm.vue");
 //
 //
 //
@@ -2343,8 +2344,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Comment",
+  components: {
+    CommentForm: _CommentForm__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   props: {
     comment: {
       type: Object,
@@ -2353,9 +2368,20 @@ __webpack_require__.r(__webpack_exports__);
     successReport: {
       type: Object
     },
+    successChildComment: {
+      type: String
+    },
+    errorsChildComment: {
+      type: Object
+    },
     parentComment: {
       type: Object
     }
+  },
+  data: function data() {
+    return {
+      reply: false
+    };
   },
   methods: {
     emitReport: function emitReport(comment) {
@@ -2365,6 +2391,12 @@ __webpack_require__.r(__webpack_exports__);
         }),
         commentId: comment.id
       });
+    },
+    onReply: function onReply() {
+      this.reply = !this.reply;
+    },
+    emitAddChildComment: function emitAddChildComment(payload) {
+      this.$emit('add-child-comment', payload);
     }
   }
 });
@@ -2406,6 +2438,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CommentForm",
   props: {
@@ -2413,6 +2446,9 @@ __webpack_require__.r(__webpack_exports__);
       type: String
     },
     errors: {
+      type: Object
+    },
+    parentComment: {
       type: Object
     }
   },
@@ -2426,7 +2462,8 @@ __webpack_require__.r(__webpack_exports__);
     emitAddComment: function emitAddComment() {
       this.$emit('add-comment', {
         name: this.name,
-        content: this.content
+        content: this.content,
+        parent_id: this.parentComment ? this.parentComment.id : null
       });
       this.resetFields();
     },
@@ -2450,6 +2487,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Comment_Comment_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Comment/Comment.vue */ "./resources/js/components/Comment/Comment.vue");
 /* harmony import */ var _Comment_CommentForm_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Comment/CommentForm.vue */ "./resources/js/components/Comment/CommentForm.vue");
+//
+//
+//
 //
 //
 //
@@ -2503,8 +2543,8 @@ __webpack_require__.r(__webpack_exports__);
       apiCommentGetUrl: this.route('api.comment.index', {
         post: this.post.id
       }),
-      success: null,
-      errors: {
+      successComment: null,
+      errorsComment: {
         errorsName: null,
         errorsContent: null
       },
@@ -2516,25 +2556,23 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post(this.apiCommentStoreUrl, payload).then(function (result) {
-        _this.comments.data.unshift(result.data.comment);
+        _this.addCommentInDom(result);
 
-        _this.success = result.data.message;
+        _this.successComment = result.data.message;
 
         _this.reset();
       })["catch"](function (error) {
-        var _error$response$data$, _error$response$data$2;
-
-        _this.errors.errorsName = (_error$response$data$ = error.response.data.errors.name) !== null && _error$response$data$ !== void 0 ? _error$response$data$ : null;
-        _this.errors.errorsContent = (_error$response$data$2 = error.response.data.errors.content) !== null && _error$response$data$2 !== void 0 ? _error$response$data$2 : null;
+        _this.errorsComment.errorsName = error.response ? error.response.data.errors.name : null;
+        _this.errorsComment.errorsContent = error.response ? error.response.data.errors.name : null;
       });
     },
     reset: function reset() {
       var _this2 = this;
 
-      this.errors.errorsName = null;
-      this.errors.errorsContent = null;
+      this.errorsComment.errorsName = null;
+      this.errorsComment.errorsContent = null;
       setTimeout(function () {
-        _this2.success = null;
+        _this2.successComment = null;
         _this2.successReport = null;
       }, 4000);
     },
@@ -2557,6 +2595,29 @@ __webpack_require__.r(__webpack_exports__);
 
         _this4.reset(_this4.successReport);
       });
+    },
+    addCommentInDom: function addCommentInDom(result) {
+      // Add new comment
+      if (!result.data.comment.parent_id) {
+        this.comments.data.unshift(result.data.comment);
+        return;
+      } // Add child comment
+
+
+      this.findIdAndPush(this.comments.data, result.data.comment.parent_id, result.data.comment);
+    },
+    findIdAndPush: function findIdAndPush(data, id, comment) {
+      for (var i = 0; i < data.length; i++) {
+        if (data[i].id === id) {
+          data[i].children.push(comment);
+        }
+
+        var children = data[i].children;
+
+        if (children.length > 0) {
+          this.findIdAndPush(children, id, comment);
+        }
+      }
     }
   }
 });
@@ -40403,7 +40464,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
           _vm.parentComment
-            ? _c("h4", [
+            ? _c("h4", { staticClass: "text text-primary" }, [
                 _vm._v("En réponse à " + _vm._s(_vm.parentComment.name))
               ])
             : _vm._e(),
@@ -40420,9 +40481,11 @@ var render = function() {
             _vm._v(_vm._s(_vm.comment.content))
           ]),
           _vm._v(" "),
-          _c("button", { staticClass: "btn btn-primary" }, [
-            _vm._v("Répondre")
-          ]),
+          _c(
+            "button",
+            { staticClass: "btn btn-primary", on: { click: _vm.onReply } },
+            [_vm._v("Répondre")]
+          ),
           _vm._v(" "),
           _c(
             "button",
@@ -40439,18 +40502,33 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
+      _vm.reply
+        ? _c("comment-form", {
+            staticClass: "ml-4",
+            attrs: {
+              success: _vm.successChildComment,
+              errors: _vm.errorsChildComment,
+              "parent-comment": _vm.comment
+            },
+            on: { "add-comment": _vm.emitAddChildComment }
+          })
+        : _vm._e(),
+      _vm._v(" "),
       _vm._l(_vm.comment.children, function(children) {
         return _c("comment", {
           key: children.id,
           attrs: {
             comment: children,
             "success-report": _vm.successReport,
-            "parent-comment": _vm.comment
+            "parent-comment": _vm.comment,
+            "success-child-comment": _vm.successChildComment,
+            "errors-child-comment": _vm.errorsChildComment
           },
           on: {
             "report-comment": function($event) {
               return _vm.emitReport(children)
-            }
+            },
+            "add-child-comment": _vm.emitAddChildComment
           }
         })
       })
@@ -40481,7 +40559,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("form", [
-    _c("h2", [_vm._v("Ajouter un commentaire")]),
+    _vm.parentComment
+      ? _c("h2", [_vm._v("Répondre à " + _vm._s(_vm.parentComment.name))])
+      : _c("h2", [_vm._v("Ajouter un commentaire")]),
     _vm._v(" "),
     _vm.success
       ? _c("div", { staticClass: "alert alert-success" }, [
@@ -40631,7 +40711,7 @@ var render = function() {
           _c("p", [_vm._v(_vm._s(_vm.post.content))]),
           _vm._v(" "),
           _c("comment-form", {
-            attrs: { success: _vm.success, errors: _vm.errors },
+            attrs: { success: _vm.successComment, errors: _vm.errorsComment },
             on: { "add-comment": _vm.addComment }
           }),
           _vm._v(" "),
@@ -40642,8 +40722,16 @@ var render = function() {
           _vm._l(_vm.comments.data, function(comment) {
             return _c("comment", {
               key: comment.id,
-              attrs: { comment: comment, "success-report": _vm.successReport },
-              on: { "report-comment": _vm.reportComment }
+              attrs: {
+                comment: comment,
+                "success-child-comment": _vm.successComment,
+                "errors-child-comment": _vm.errorsComment,
+                "success-report": _vm.successReport
+              },
+              on: {
+                "report-comment": _vm.reportComment,
+                "add-child-comment": _vm.addComment
+              }
             })
           }),
           _vm._v(" "),

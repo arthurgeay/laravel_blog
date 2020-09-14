@@ -37,8 +37,10 @@ class CommentController extends Controller
         $comment->name = $request->get('name');
         $comment->content = $request->get('content');
         $comment->post_id = $post->id;
+        $comment->parent_id = $request->get('parent_id');
 
         $comment->save();
+        $comment->setRelation('children', collect());
 
         return response()->json(['message' => 'Commentaire ajouté', 'comment' => $comment], 200);
     }

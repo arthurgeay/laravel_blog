@@ -1,6 +1,7 @@
 <template>
     <form>
-        <h2>Ajouter un commentaire</h2>
+        <h2 v-if="parentComment">Répondre à {{ parentComment.name }}</h2>
+        <h2 v-else>Ajouter un commentaire</h2>
 
         <div v-if="success" class="alert alert-success">
             {{ success }}
@@ -33,6 +34,9 @@
             },
             errors: {
                 type: Object
+            },
+            parentComment: {
+                type: Object
             }
         },
         data() {
@@ -45,7 +49,8 @@
             emitAddComment() {
                 this.$emit('add-comment', {
                     name: this.name,
-                    content: this.content
+                    content: this.content,
+                    parent_id: this.parentComment ? this.parentComment.id : null
                 });
                 this.resetFields();
             },

@@ -46,11 +46,11 @@ class PostController extends Controller
     {
         $post->load(['user']);
 
-        $comments = Comment::with('children')
-            ->where('post_id', $post->id)
+        $comments = Comment::where('post_id', $post->id)
             ->whereNull('parent_id')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+
 
         return view('posts.show', [
             'post' => $post,

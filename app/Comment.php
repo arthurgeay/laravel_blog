@@ -16,6 +16,8 @@ class Comment extends Model
         'parent_id'
     ];
 
+    protected $with = ['children'];
+
     public function getCreatedAtAttribute($value)
     {
         return Carbon::instance(new \DateTime($value))->diffForHumans();
