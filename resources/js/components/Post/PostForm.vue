@@ -89,7 +89,7 @@
 
                 setTimeout(() => {
                    this.successMessage = '';
-                }, 4000);
+                }, 800);
             },
             setFields() {
                 if(this.post) {

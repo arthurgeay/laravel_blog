@@ -112,7 +112,7 @@
                 setTimeout(() => {
                     this.success = '';
                     this.error = '';
-                }, 4000);
+                }, 800);
             }
         }
     }

@@ -77,7 +77,7 @@
 
                 setTimeout(() => {
                     this.successComment = null;
-                }, 4000);
+                }, 800);
             },
             getComments(page = 1) {
                 axios.get(`${this.apiCommentGetUrl}?page=${page}`)

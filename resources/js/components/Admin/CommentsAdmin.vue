@@ -133,7 +133,7 @@
                 setTimeout(() => {
                     this.success = null;
                     this.error = null;
-                }, 4000);
+                }, 800);
             },
             resetComment(id, index) {
                 axios.get(this.route('api.comment.report.reset', { api_token: this.apiToken, comment: id}))

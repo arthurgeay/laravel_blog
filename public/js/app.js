@@ -2048,7 +2048,7 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         _this2.success = null;
         _this2.error = null;
-      }, 4000);
+      }, 800);
     },
     resetComment: function resetComment(id, index) {
       var _this3 = this;
@@ -2298,7 +2298,7 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         _this3.success = '';
         _this3.error = '';
-      }, 4000);
+      }, 800);
     }
   }
 });
@@ -2583,7 +2583,7 @@ __webpack_require__.r(__webpack_exports__);
       this.errorsComment.errorsContent = null;
       setTimeout(function () {
         _this2.successComment = null;
-      }, 4000);
+      }, 800);
     },
     getComments: function getComments() {
       var _this3 = this;
@@ -2729,7 +2729,7 @@ __webpack_require__.r(__webpack_exports__);
       this.error = null;
       setTimeout(function () {
         _this2.successMessage = '';
-      }, 4000);
+      }, 800);
     },
     setFields: function setFields() {
       if (this.post) {
