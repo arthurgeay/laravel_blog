@@ -41,7 +41,7 @@ Vue.component('dashboard', require('./components/Admin/Dashboard').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-/* Global filter for format date */
+/* Global filter for format datee */
 Vue.filter('formatDate', function(value, withTime = false) {
     if(withTime) {
         return new Date(value).toLocaleString();

@@ -2352,8 +2352,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Comment",
@@ -2364,9 +2362,6 @@ __webpack_require__.r(__webpack_exports__);
     comment: {
       type: Object,
       required: true
-    },
-    successReport: {
-      type: Object
     },
     successChildComment: {
       type: String
@@ -2380,16 +2375,27 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      reply: false
+      reply: false,
+      successReport: null
     };
   },
   methods: {
-    emitReport: function emitReport(comment) {
-      this.$emit('report-comment', {
+    reportComment: function reportComment(comment) {
+      var _this = this;
+
+      var data = {
         urlApi: this.route('api.comment.report', {
           comment: comment.id
         }),
         commentId: comment.id
+      };
+      axios.get(data.urlApi).then(function (result) {
+        _this.successReport = {
+          message: result.data.message,
+          commentId: data.commentId
+        };
+
+        _this.reset();
       });
     },
     onReply: function onReply() {
@@ -2397,6 +2403,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     emitAddChildComment: function emitAddChildComment(payload) {
       this.$emit('add-child-comment', payload);
+    },
+    reset: function reset() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        _this2.successReport = null;
+      }, 800);
     }
   }
 });
@@ -2514,8 +2527,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2547,8 +2558,7 @@ __webpack_require__.r(__webpack_exports__);
       errorsComment: {
         errorsName: null,
         errorsContent: null
-      },
-      successReport: null
+      }
     };
   },
   methods: {
@@ -2573,7 +2583,6 @@ __webpack_require__.r(__webpack_exports__);
       this.errorsComment.errorsContent = null;
       setTimeout(function () {
         _this2.successComment = null;
-        _this2.successReport = null;
       }, 4000);
     },
     getComments: function getComments() {
@@ -2582,18 +2591,6 @@ __webpack_require__.r(__webpack_exports__);
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       axios.get("".concat(this.apiCommentGetUrl, "?page=").concat(page)).then(function (result) {
         return _this3.comments = result.data;
-      });
-    },
-    reportComment: function reportComment(payload) {
-      var _this4 = this;
-
-      axios.get(payload.urlApi).then(function (result) {
-        _this4.successReport = {
-          message: result.data.message,
-          commentId: payload.commentId
-        };
-
-        _this4.reset(_this4.successReport);
       });
     },
     addCommentInDom: function addCommentInDom(result) {
@@ -40493,7 +40490,7 @@ var render = function() {
               staticClass: "btn btn-secondary",
               on: {
                 click: function($event) {
-                  return _vm.emitReport(_vm.comment)
+                  return _vm.reportComment(_vm.comment)
                 }
               }
             },
@@ -40519,17 +40516,11 @@ var render = function() {
           key: children.id,
           attrs: {
             comment: children,
-            "success-report": _vm.successReport,
             "parent-comment": _vm.comment,
             "success-child-comment": _vm.successChildComment,
             "errors-child-comment": _vm.errorsChildComment
           },
-          on: {
-            "report-comment": function($event) {
-              return _vm.emitReport(children)
-            },
-            "add-child-comment": _vm.emitAddChildComment
-          }
+          on: { "add-child-comment": _vm.emitAddChildComment }
         })
       })
     ],
@@ -40725,13 +40716,9 @@ var render = function() {
               attrs: {
                 comment: comment,
                 "success-child-comment": _vm.successComment,
-                "errors-child-comment": _vm.errorsComment,
-                "success-report": _vm.successReport
+                "errors-child-comment": _vm.errorsComment
               },
-              on: {
-                "report-comment": _vm.reportComment,
-                "add-child-comment": _vm.addComment
-              }
+              on: { "add-child-comment": _vm.addComment }
             })
           }),
           _vm._v(" "),
@@ -53213,7 +53200,7 @@ Vue.component('dashboard', __webpack_require__(/*! ./components/Admin/Dashboard 
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-/* Global filter for format date */
+/* Global filter for format datee */
 
 Vue.filter('formatDate', function (value) {
   var withTime = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;

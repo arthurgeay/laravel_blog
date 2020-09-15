@@ -14,8 +14,6 @@
                          :comment="comment" :key="comment.id"
                          :success-child-comment="successComment"
                          :errors-child-comment="errorsComment"
-                         :success-report="successReport"
-                         @report-comment="reportComment"
                          @add-child-comment="addComment"
                 ></comment>
 
@@ -56,8 +54,7 @@
                 errorsComment: {
                     errorsName: null,
                     errorsContent: null
-                },
-                successReport: null
+                }
             }
         },
         methods: {
@@ -80,22 +77,11 @@
 
                 setTimeout(() => {
                     this.successComment = null;
-                    this.successReport = null;
                 }, 4000);
             },
             getComments(page = 1) {
                 axios.get(`${this.apiCommentGetUrl}?page=${page}`)
                     .then(result => this.comments = result.data)
-            },
-            reportComment(payload) {
-                axios.get(payload.urlApi)
-                    .then(result => {
-                        this.successReport = {
-                            message: result.data.message,
-                            commentId: payload.commentId
-                        };
-                        this.reset(this.successReport);
-                    })
             },
             addCommentInDom(result) {
                 // Add new comment

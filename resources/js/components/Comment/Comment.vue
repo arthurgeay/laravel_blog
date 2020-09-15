@@ -10,7 +10,7 @@
                 <h6 class="card-subtitle mb-2 text-muted">{{ comment.created_at }}</h6>
                 <p class="card-text">{{ comment.content }}</p>
                 <button class="btn btn-primary" @click="onReply">Répondre</button>
-                <button class="btn btn-secondary" @click="emitReport(comment)">Signaler le commentaire</button>
+                <button class="btn btn-secondary" @click="reportComment(comment)">Signaler le commentaire</button>
             </div>
         </div>
 
@@ -24,11 +24,9 @@
         <comment v-for="children in comment.children"
                      :key="children.id"
                      :comment="children"
-                     :success-report="successReport"
                      :parent-comment="comment"
                      :success-child-comment="successChildComment"
                      :errors-child-comment="errorsChildComment"
-                     @report-comment="emitReport(children)"
                      @add-child-comment="emitAddChildComment"
                     ></comment>
     </div>
@@ -47,9 +45,6 @@
                 type: Object,
                 required: true
             },
-            successReport: {
-                type: Object
-            },
             successChildComment: {
                 type: String
             },
@@ -58,25 +53,39 @@
             },
             parentComment: {
                 type: Object
-            }
+            },
         },
         data() {
             return {
-                reply: false
+                reply: false,
+                successReport: null
             }
         },
         methods: {
-            emitReport(comment) {
-                this.$emit('report-comment', {
+            reportComment(comment) {
+                const data = {
                     urlApi: this.route('api.comment.report', {comment: comment.id}),
                     commentId: comment.id
-                });
+                };
+                axios.get(data.urlApi)
+                    .then(result => {
+                        this.successReport = {
+                            message: result.data.message,
+                            commentId: data.commentId
+                        };
+                        this.reset();
+                    })
             },
             onReply() {
                 this.reply = !this.reply;
             },
             emitAddChildComment(payload) {
                 this.$emit('add-child-comment', payload);
+            },
+            reset() {
+                setTimeout(() => {
+                    this.successReport = null;
+                }, 800);
             }
         },
     }
