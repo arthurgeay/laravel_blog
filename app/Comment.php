@@ -18,11 +18,6 @@ class Comment extends Model
 
     protected $with = ['children'];
 
-    public function getCreatedAtAttribute($value)
-    {
-        return Carbon::instance(new \DateTime($value))->diffForHumans();
-    }
-
     public function post()
     {
         return $this->belongsTo(Post::class);

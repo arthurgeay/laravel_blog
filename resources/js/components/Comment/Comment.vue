@@ -7,7 +7,7 @@
             <div class="card-body">
                 <h4 v-if="parentComment" class="text text-primary">En réponse à {{ parentComment.name }}</h4>
                 <h5 class="card-title">{{ comment.name }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ comment.created_at }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">{{ formatDate(comment.created_at) }}</h6>
                 <p class="card-text">{{ comment.content }}</p>
                 <button class="btn btn-primary" @click="onReply">Répondre</button>
                 <button class="btn btn-secondary" @click="reportComment(comment)">Signaler le commentaire</button>
@@ -37,6 +37,9 @@
 
 <script>
     import CommentForm from "./CommentForm";
+    import { formatDistance } from 'date-fns';
+    import { fr } from 'date-fns/locale';
+
     export default {
         name: "Comment",
         components: {CommentForm},
@@ -58,8 +61,14 @@
         data() {
             return {
                 reply: false,
-                successReport: null
+                successReport: null,
+                now: new Date()
             }
+        },
+        mounted() {
+            setInterval(() => {
+                this.now = new Date();
+            }, 1000);
         },
         methods: {
             reportComment(comment) {
@@ -86,6 +95,9 @@
                 setTimeout(() => {
                     this.successReport = null;
                 }, 800);
+            },
+            formatDate(date) {
+                return `il y a ${formatDistance(new Date(date), this.now, { locale: fr })}`;
             }
         },
     }
